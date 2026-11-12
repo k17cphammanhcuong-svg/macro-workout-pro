@@ -43,6 +43,20 @@
             50% { border-color: rgba(220, 38, 38, 0.25); }
         }
         .locked-field { opacity: 0.65; pointer-events: none; background-color: #f1f5f9 !important; }
+        /* ===== SUB-TABS (Tab con) ===== */
+        @media screen {
+            .subtab-hidden, .subtab-col-hidden { display: none !important; }
+            .subtab-fullwidth { grid-column: 1 / -1 !important; }
+        }
+        .subtab-bar { grid-column: 1 / -1; }
+        .subtab-scroller { scrollbar-width: none; }
+        .subtab-scroller::-webkit-scrollbar { display: none; }
+        .subtab-btn.subtab-active { background: linear-gradient(135deg, #ea580c, #f97316); color: #ffffff !important; border-color: #ea580c; box-shadow: 0 3px 10px rgba(234, 88, 12, 0.22); }
+        .subtab-btn.subtab-active .subtab-num { background: rgba(0,0,0,0.18); color: #ffffff; }
+        html.dark .subtab-scroller { background-color: #0f172a !important; border-color: #334155 !important; }
+        html.dark .subtab-btn:not(.subtab-active) { color: #cbd5e1 !important; }
+        html.dark .subtab-btn:not(.subtab-active):hover { background-color: #1e293b !important; }
+
         #printableA4StudentHandout { display: none; }
         @media print {
             @page { size: A4 portrait; margin: 10mm 12mm; }
@@ -783,7 +797,7 @@
             </button>
 
             <button id="btnTab_cost" onclick="switchMainTab('cost')" class="py-2 px-3.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition flex items-center justify-center gap-1.5 border border-transparent flex-shrink-0">
-                <span>💰 Chi Phí &amp; Cân Nặng</span>
+                <span>📈 Tiến Độ &amp; Chi Phí</span>
                 <span id="badgeTabCost" class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">0đ</span>
             </button>
 
@@ -823,6 +837,7 @@
         <!-- TAB 1: THỰC ĐƠN DINH DƯỠNG                                                -->
         <!-- ========================================================================= -->
         <div id="tabContent_nutrition" class="grid grid-cols-1 lg:grid-cols-12 gap-6 print-grid-show">
+            <div id="subTabBar_nutrition" class="subtab-bar no-print"></div>
             <!-- Cột Trái -->
             <div id="nutritionLeftTechCol" class="lg:col-span-4 space-y-5">
                 <div id="cardBodyMetrics" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4 print-card">
@@ -1009,7 +1024,7 @@
 
             <!-- Cột Phải: Kết quả Macro & Chọn Thực phẩm -->
             <div id="nutritionRightMainCol" class="lg:col-span-8 space-y-5">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4 print-card">
+                <div id="cardMacroTargetSummary" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4 print-card">
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
                         <h2 class="text-base font-extrabold text-slate-800">Năng lượng &amp; Macro Mục tiêu</h2>
                         <button type="button" onclick="openGlossaryOverviewModal(event)" class="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2.5 py-0.5 rounded-full transition no-print">
@@ -1423,6 +1438,7 @@
         <!-- TAB 2: BỆNH LÝ & CHẤN THƯƠNG                                              -->
         <!-- ========================================================================= -->
         <div id="tabContent_injury" class="hidden space-y-6 print-only-show">
+            <div id="subTabBar_injury" class="subtab-bar no-print"></div>
             <div id="cardInjuryScreening" class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 print-card">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-slate-100 pb-4">
                     <div>
@@ -1439,7 +1455,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 text-xs" id="injuryCheckboxContainer"></div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-2 items-stretch">
+                <div id="injuryNotesRpeBlock" class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-2 items-stretch">
                     <div class="lg:col-span-7 bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
                         <label class="block text-xs font-bold text-slate-700 uppercase">📝 Ghi chú lâm sàng &amp; Chỉ định PT:</label>
                         <textarea id="clinicalNotes" rows="3" placeholder="VD: Thoát vị đĩa đệm L4-L5 nhẹ, hạn chế gập lưng dưới tải nặng..." oninput="onInjuryChange()" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs text-slate-800 outline-none"></textarea>
@@ -1459,7 +1475,7 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                <div id="injuryAffectedBlock" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
                     <h3 class="text-sm font-bold text-red-600">📋 Bài tập cần lưu ý theo hồ sơ hiện tại:</h3>
                     <div id="injuryAffectedExercisesPreview" class="space-y-2 text-xs"></div>
                 </div>
@@ -1470,6 +1486,7 @@
         <!-- TAB 3: GIÁO ÁN BÀI TẬP & TÍNH TẠ 1RM                                      -->
         <!-- ========================================================================= -->
         <div id="tabContent_workout" class="hidden space-y-6 print-only-show">
+            <div id="subTabBar_workout" class="subtab-bar no-print"></div>
             <!-- ========================================================================= -->
             <!-- MINI-DASHBOARD TỔNG HỢP VOLUME 7 NGÀY & CẢNH BÁO QUÁ TẢI (>22 SETS/TUẦN)   -->
             <!-- ========================================================================= -->
@@ -1540,17 +1557,17 @@
                     <div class="flex flex-wrap items-center gap-2.5">
                         <div class="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
                             <span class="font-bold text-slate-700">Bench Press:</span>
-                            <input type="number" id="rmBench" value="110" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center font-extrabold text-orange-600">
+                            <input type="number" id="rmBench" value="110" oninput="on1RMInputChange()" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center font-extrabold text-orange-600">
                             <span>kg</span>
                         </div>
                         <div class="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
                             <span class="font-bold text-slate-700">Back Squat:</span>
-                            <input type="number" id="rmSquat" value="120" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center font-extrabold text-orange-600">
+                            <input type="number" id="rmSquat" value="120" oninput="on1RMInputChange()" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center font-extrabold text-orange-600">
                             <span>kg</span>
                         </div>
                         <div class="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
                             <span class="font-bold text-slate-700">Deadlift:</span>
-                            <input type="number" id="rmDeadlift" value="165" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center font-extrabold text-orange-600">
+                            <input type="number" id="rmDeadlift" value="165" oninput="on1RMInputChange()" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center font-extrabold text-orange-600">
                             <span>kg</span>
                         </div>
                         <button type="button" onclick="autoFillWeightsFrom1RM()" class="px-3.5 py-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl shadow-sm transition no-print">
@@ -1776,9 +1793,10 @@
         <!-- TAB 4: CHI PHÍ, SỐ ĐO CƠ THỂ & CHECK-IN TIẾN ĐỘ                           -->
         <!-- ========================================================================= -->
         <div id="tabContent_cost" class="hidden space-y-6 print-only-show">
+            <div id="subTabBar_cost" class="subtab-bar no-print"></div>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- CỘT TRÁI (7 COL): BIỂU ĐỒ CÂN NẶNG XU HƯỚNG 7 NGÀY + SỐ ĐO 3 VÒNG + CHI PHÍ ĐI CHỢ -->
-                <div class="lg:col-span-7 space-y-5">
+                <div id="costLeftCol" class="lg:col-span-7 space-y-5">
                     <!-- 1. BIỂU ĐỒ CÂN NẶNG & ĐƯỜNG TRUNG BÌNH TRƯỢT 7 NGÀY (MOVING AVERAGE) -->
                     <div id="cardWeightTracker" class="bg-white p-5 rounded-2xl shadow-sm border border-orange-200 space-y-4 print-card">
                         <div class="flex flex-wrap justify-between items-center gap-2 border-b border-orange-100 pb-3">
@@ -1826,7 +1844,7 @@
                     </div>
 
                     <!-- 2. CHI PHÍ ĐI CHỢ & DANH SÁCH MUA SẮM 7 NGÀY -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4 print-card">
+                    <div id="cardShoppingCost" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4 print-card">
                         <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-100 pb-3">
                             <div>
                                 <h2 class="text-base md:text-lg font-extrabold text-slate-800">💰 Chi phí Thực phẩm &amp; Danh sách Đi chợ 7 Ngày</h2>
@@ -1890,7 +1908,7 @@
                 </div>
 
                 <!-- CỘT PHẢI (5 COL): SỐ ĐO 3 VÒNG RECOMP + SO SÁNH ẢNH BEFORE/AFTER & CHECK-IN TUẦN -->
-                <div class="lg:col-span-5 space-y-5">
+                <div id="costRightCol" class="lg:col-span-5 space-y-5">
                     <!-- 3. NHẬT KÝ SỐ ĐO CHU VI CƠ THỂ (EO - MÔNG - NGỰC - TAY - ĐÙI) -->
                     <div id="cardBodyMeasurements" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4 print-card">
                         <div class="flex justify-between items-start border-b border-slate-100 pb-3">
@@ -2029,8 +2047,9 @@
         <!-- TAB 5: CÀI ĐẶT, PHÂN QUYỀN & ĐỒNG BỘ ĐÁM MÂY (FIREBASE / GOOGLE SHEETS)    -->
         <!-- ========================================================================= -->
         <div id="tabContent_settings" class="hidden space-y-6 no-print">
+            <div id="subTabBar_settings" class="subtab-bar no-print"></div>
             <!-- KHỐI ĐỒNG BỘ ĐÁM MÂY TRỰC TUYẾN (FIREBASE AUTH + SECURITY RULES) -->
-            <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border-2 border-sky-300 space-y-4">
+            <div id="cardCloudSync" class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border-2 border-sky-300 space-y-4">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-sky-100 pb-3">
                     <div>
                         <div class="flex items-center gap-2">
@@ -2126,9 +2145,9 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div id="cardAccountsPermissions" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Ma trận Phân quyền RBAC -->
-                <div class="lg:col-span-6 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-orange-200 space-y-4">
+                <div id="cardPermissionsMatrix" class="lg:col-span-6 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-orange-200 space-y-4">
                     <div class="border-b border-orange-100 pb-3">
                         <h2 class="text-lg font-extrabold text-orange-600">🛡️ Ma Trận Phân Phối Quyền Thành Viên (RBAC)</h2>
                         <p class="text-xs text-slate-500 mt-1">Khi học viên đăng nhập, các công cụ của Admin đã bị ẩn hoàn toàn. Bạn có thể bật/tắt thêm các quyền chi tiết dưới đây:</p>
@@ -2138,7 +2157,7 @@
                 </div>
 
                 <!-- Quản lý Tài khoản Đăng nhập -->
-                <div class="lg:col-span-6 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-orange-200 space-y-4">
+                <div id="cardAccountsManager" class="lg:col-span-6 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-orange-200 space-y-4">
                     <div class="border-b border-orange-100 pb-3">
                         <h2 class="text-lg font-extrabold text-orange-600">👥 Quản Lý Tài Khoản Admin & Học Viên</h2>
                         <p class="text-xs text-slate-500 mt-1">Tài khoản Admin gốc: <strong>cuong8000</strong> (Mật khẩu: <strong>cuong8001</strong>). Sau khi tạo tài khoản cho học viên, hệ thống sẽ tự động đẩy lên Cloud.</p>
@@ -4435,28 +4454,167 @@
             showToastNotification('Đã đổi sang bài tập thay thế an toàn!', '🔄');
         }
 
-        function autoFillWeightsFrom1RM() {
-            const bench1RM = parseFloat(document.getElementById('rmBench').value) || 100;
-            const squat1RM = parseFloat(document.getElementById('rmSquat').value) || 120;
-            const dead1RM = parseFloat(document.getElementById('rmDeadlift').value) || 150;
+        // =========================================================================
+        // BẢN ĐỒ ÁNH XẠ 1RM TOÀN DIỆN CHO TẤT CẢ CÁC BÀI TẬP VÀ GIÁO ÁN (EXCEL & THƯ VIỆN)
+        // =========================================================================
+        const EXERCISE_1RM_LOOKUP = {
+            // Nhóm NGỰC / VAI TRƯỚC / TAY SAU (Dẫn xuất từ Bench Press 1RM)
+            bench_press:           { ref: 'bench', ratio: 0.80 },  // Barbell Bench Press
+            db_bench_press:        { ref: 'bench', ratio: 0.35 },  // DB Bench Press mỗi bên
+            incline_db_press:      { ref: 'bench', ratio: 0.32 },  // Incline DB Press mỗi bên
+            chest_dips:            { ref: 'bench', ratio: 0.50 },  // Dips xà kép
+            push_up:               { ref: 'bench', ratio: 0.40 },  // Pushups
+            cable_fly:             { ref: 'bench', ratio: 0.15 },  // Cable Fly / Pec Deck
+            landmine_press:        { ref: 'bench', ratio: 0.35 },  // Landmine Press
+            overhead_press:        { ref: 'bench', ratio: 0.55 },  // OHP Đẩy vai đòn
+            arnold_press:          { ref: 'bench', ratio: 0.25 },  // Arnold Press / DB Shoulder Press
+            lateral_raise:         { ref: 'bench', ratio: 0.10 },  // Bay vai ngang
+            reverse_pec_deck:      { ref: 'bench', ratio: 0.15 },  // Bay vai sau máy
+            skull_crusher:         { ref: 'bench', ratio: 0.25 },  // EZ Bar Skull Crusher
+            tricep_pushdown:       { ref: 'bench', ratio: 0.25 },  // Duỗi cáp tay sau
+            overhead_tricep_ext:   { ref: 'bench', ratio: 0.20 },  // Duỗi tay sau qua đầu
+            barbell_curl:          { ref: 'bench', ratio: 0.35 },  // Cuốn tạ đòn tay trước
+            incline_db_curl:       { ref: 'bench', ratio: 0.15 },  // Cuốn tạ đơn ghế dốc
+            preacher_curl:         { ref: 'bench', ratio: 0.25 },  // Cuốn bắp tay Preacher
 
-            Object.keys(weeklyWorkoutPlan).forEach(dayKey => {
-                weeklyWorkoutPlan[dayKey].items.forEach(item => {
-                    const libEx = EXERCISE_LIBRARY.find(e => e.id === item.id || e.name === item.name);
-                    if (libEx && libEx.rmRef) {
-                        const baseRM = libEx.rmRef === 'bench' ? bench1RM : (libEx.rmRef === 'squat' ? squat1RM : dead1RM);
-                        const warns = getExerciseWarnings(libEx.id);
-                        const ratio = warns.length > 0 ? (libEx.rmRatio * 0.85) : libEx.rmRatio;
-                        const weightKg = Math.round((baseRM * ratio) / 2.5) * 2.5;
-                        item.note = warns.length > 0 
-                            ? `⚠️ ~${weightKg}kg (Giảm tải RPE 6.5-7)` 
-                            : `🏋️ ~${weightKg}kg (RPE 8)`;
+            // Nhóm LƯNG / XÔ / CHUỖI SAU (Dẫn xuất từ Deadlift 1RM)
+            deadlift:              { ref: 'deadlift', ratio: 0.80 }, // Deadlift truyền thống
+            sumo_deadlift:         { ref: 'deadlift', ratio: 0.80 }, // Sumo Deadlift
+            block_pull:            { ref: 'deadlift', ratio: 0.85 }, // Rack Pull / Block Pull
+            romanian_deadlift:     { ref: 'deadlift', ratio: 0.60 }, // Romanian Deadlift (RDL)
+            barbell_row:           { ref: 'deadlift', ratio: 0.50 }, // Bent-Over BB Row
+            pendlay_row:           { ref: 'deadlift', ratio: 0.45 }, // Pendlay / Chest Supported Row
+            single_arm_db_row:     { ref: 'deadlift', ratio: 0.25 }, // Chèo tạ đơn 1 tay
+            seated_cable_row:      { ref: 'deadlift', ratio: 0.45 }, // Ngồi kéo cáp lưng
+            pull_up:               { ref: 'deadlift', ratio: 0.45 }, // Pull-Ups / Lat Pulldown
+            straight_arm_pulldown: { ref: 'deadlift', ratio: 0.20 }, // Kéo cáp tay thẳng
+            face_pull:             { ref: 'deadlift', ratio: 0.20 }, // Face Pull dây thừng
+            back_extension:        { ref: 'deadlift', ratio: 0.25 }, // Hyperextension
+            good_morning:          { ref: 'deadlift', ratio: 0.35 }, // Good Mornings
+            kb_swing:              { ref: 'deadlift', ratio: 0.20 }, // Kettlebell Swing
+            farmer_walk_core:      { ref: 'deadlift', ratio: 0.30 }, // Pallof / Farmer Walk
+
+            // Nhóm ĐÙI / MÔNG / BẮP CHÂN (Dẫn xuất từ Squat 1RM)
+            barbell_squat:         { ref: 'squat', ratio: 0.80 },  // Barbell Back Squat
+            box_squat:             { ref: 'squat', ratio: 0.75 },  // Box Squat
+            goblet_squat:          { ref: 'squat', ratio: 0.25 },  // Goblet Squat
+            sissy_squat:           { ref: 'squat', ratio: 0.15 },  // Sissy Squats
+            leg_press:             { ref: 'squat', ratio: 1.50 },  // 45° Leg Press
+            hip_thrust:            { ref: 'squat', ratio: 0.85 },  // Barbell Hip Thrust
+            glute_bridge_frog:     { ref: 'squat', ratio: 0.30 },  // Glute Bridge
+            glute_kickback:        { ref: 'squat', ratio: 0.15 },  // Cable Glute Kickback
+            hip_abduction:         { ref: 'squat', ratio: 0.35 },  // Hip Abduction Machine
+            bulgarian_split_squat: { ref: 'squat', ratio: 0.25 },  // Bulgarian Split Squat
+            poliquin_split_squat:  { ref: 'squat', ratio: 0.25 },  // Poliquin Split Squat
+            box_step_up:           { ref: 'squat', ratio: 0.20 },  // Box Step-Up / Lunges
+            leg_curl_ext:          { ref: 'squat', ratio: 0.35 },  // Leg Extension / Leg Curl
+            calf_raise:            { ref: 'squat', ratio: 0.50 }   // Calf Raise nhón bắp chuối
+        };
+
+        function resolveExercise1RMConfig(ex) {
+            if (!ex) return null;
+            const exId = String(ex.id || '').toLowerCase().trim();
+            if (EXERCISE_1RM_LOOKUP[exId]) return EXERCISE_1RM_LOOKUP[exId];
+
+            // Tra cứu từ EXERCISE_LIBRARY
+            const libEx = EXERCISE_LIBRARY.find(e => e.id === ex.id || e.name === ex.name);
+            if (libEx && libEx.rmRef) {
+                return { ref: libEx.rmRef, ratio: libEx.rmRatio || 0.7 };
+            }
+
+            // Phân tích thông minh theo tên bài tập
+            const nameStr = String(ex.name || '').toLowerCase();
+            if (nameStr.includes('bench') || nameStr.includes('ngực') || nameStr.includes('chest press') || nameStr.includes('dips')) {
+                return { ref: 'bench', ratio: nameStr.includes('dumb') ? 0.35 : 0.75 };
+            }
+            if (nameStr.includes('shoulder') || nameStr.includes('ohp') || nameStr.includes('đẩy vai') || nameStr.includes('arnold')) {
+                return { ref: 'bench', ratio: 0.45 };
+            }
+            if (nameStr.includes('squat') || nameStr.includes('gánh tạ') || nameStr.includes('đạp đùi') || nameStr.includes('leg press') || nameStr.includes('thrust')) {
+                return { ref: 'squat', ratio: nameStr.includes('leg press') ? 1.5 : (nameStr.includes('thrust') ? 0.85 : 0.75) };
+            }
+            if (nameStr.includes('deadlift') || nameStr.includes('rdl') || nameStr.includes('kéo lưng') || nameStr.includes('pull') || nameStr.includes('row')) {
+                return { ref: 'deadlift', ratio: (nameStr.includes('row') || nameStr.includes('pull')) ? 0.45 : 0.75 };
+            }
+            return null;
+        }
+
+        function calculateExerciseWeightFrom1RM(ex, optRMs = null) {
+            const cfg = resolveExercise1RMConfig(ex);
+            if (!cfg || !cfg.ref || !cfg.ratio) return null;
+
+            const bench1RM = optRMs?.bench ?? (parseFloat(document.getElementById('rmBench')?.value) || 110);
+            const squat1RM = optRMs?.squat ?? (parseFloat(document.getElementById('rmSquat')?.value) || 120);
+            const dead1RM = optRMs?.deadlift ?? (parseFloat(document.getElementById('rmDeadlift')?.value) || 165);
+
+            const baseRM = cfg.ref === 'bench' ? bench1RM : (cfg.ref === 'squat' ? squat1RM : dead1RM);
+            const warns = (typeof getExerciseWarnings === 'function') ? getExerciseWarnings(ex.id || ex.name) : [];
+            const effectiveRatio = warns.length > 0 ? (cfg.ratio * 0.85) : cfg.ratio;
+            const weightKg = Math.round((baseRM * effectiveRatio) / 2.5) * 2.5;
+
+            return {
+                weightKg,
+                isWarn: warns.length > 0,
+                baseRM,
+                ref: cfg.ref,
+                ratio: cfg.ratio
+            };
+        }
+
+        let _rmDebounceTimer = null;
+        function on1RMInputChange() {
+            clearTimeout(_rmDebounceTimer);
+            _rmDebounceTimer = setTimeout(() => {
+                autoFillWeightsFrom1RM({ silent: true });
+                saveWorkingDraftToLocal();
+            }, 350);
+        }
+
+        function autoFillWeightsFrom1RM(opts = {}) {
+            const bench1RM = parseFloat(document.getElementById('rmBench')?.value) || 110;
+            const squat1RM = parseFloat(document.getElementById('rmSquat')?.value) || 120;
+            const dead1RM = parseFloat(document.getElementById('rmDeadlift')?.value) || 165;
+            const rms = { bench: bench1RM, squat: squat1RM, deadlift: dead1RM };
+
+            let updatedCount = 0;
+            Object.keys(weeklyWorkoutPlan || {}).forEach(dayKey => {
+                const day = weeklyWorkoutPlan[dayKey];
+                if (!day || !Array.isArray(day.items)) return;
+                day.items.forEach(item => {
+                    const res = calculateExerciseWeightFrom1RM(item, rms);
+                    if (res && res.weightKg > 0) {
+                        updatedCount++;
+                        // Giữ lại ghi chú kỹ thuật gốc nếu có (VD: Drop Sets to Failure, FST-7, Superset...)
+                        let cleanOldNote = String(item.note || '')
+                            .replace(/^(?:⚠️|🏋️)\s*~\d+(?:\.\d+)?kg\s*\([^)]*\)\s*•?\s*/i, '')
+                            .replace(/~?\d+(?:\.\d+)?kg/gi, '')
+                            .trim();
+
+                        const rpeTag = res.isWarn ? 'Giảm tải RPE 6.5-7' : 'RPE 8';
+                        const prefix = res.isWarn ? `⚠️ ~${res.weightKg}kg (${rpeTag})` : `🏋️ ~${res.weightKg}kg (${rpeTag})`;
+                        item.note = cleanOldNote ? `${prefix} • ${cleanOldNote}` : prefix;
+
+                        // Đồng bộ mức tạ vào các hiệp tập (setLogs) chưa hoàn thành
+                        const numSets = Math.max(1, parseInt(item.sets) || 3);
+                        if (!Array.isArray(item.setLogs)) item.setLogs = [];
+                        const defaultReps = String(item.reps || '10').split('-')[0].replace(/[^0-9]/g, '') || '10';
+                        while (item.setLogs.length < numSets) {
+                            item.setLogs.push({ done: false, weight: String(res.weightKg), reps: defaultReps });
+                        }
+                        item.setLogs.forEach(s => {
+                            if (!s.done && (!s.weight || opts.overwriteSets)) {
+                                s.weight = String(res.weightKg);
+                            }
+                        });
                     }
                 });
             });
-            renderCurrentDayWorkout();
-            saveWorkingDraftToLocal();
-            showToastNotification('Đã tự động tính toán và điền số kg tạ gợi ý vào toàn bộ lịch tập!', '🏋️');
+
+            if (typeof renderCurrentDayWorkout === 'function') renderCurrentDayWorkout();
+            if (typeof saveWorkingDraftToLocal === 'function') saveWorkingDraftToLocal();
+            if (!opts.silent && typeof showToastNotification === 'function') {
+                showToastNotification(`Đã liên kết và tự động điền mức tạ cho ${updatedCount} bài tập theo 1RM!`, '🏋️');
+            }
         }
 
         function renderInjuryCheckboxes() {
@@ -4905,6 +5063,8 @@
                 }
             }
             if (selectedInjuries.length > 0) autoAdjustScheduleRPE();
+            // Tự động liên kết mức tạ 1RM của tài khoản vào toàn bộ bài tập trong giáo án vừa chọn
+            autoFillWeightsFrom1RM({ silent: true, overwriteSets: true });
             renderDaySelector();
             renderCurrentDayWorkout();
             saveWorkingDraftToLocal();
@@ -6380,6 +6540,9 @@
                 isDeloadWeek: typeof isDeloadWeek !== 'undefined' ? !!isDeloadWeek : false,
                 selectedInjuries: selectedInjuries,
                 clinicalNotes: document.getElementById('clinicalNotes').value,
+                rmBench: document.getElementById('rmBench')?.value || 110,
+                rmSquat: document.getElementById('rmSquat')?.value || 120,
+                rmDeadlift: document.getElementById('rmDeadlift')?.value || 165,
                 weightLogs: currentWeightLogs,
                 workoutPlan: weeklyWorkoutPlan,
                 workoutSessionHistory: typeof workoutSessionHistory !== 'undefined' ? workoutSessionHistory : [],
@@ -6447,6 +6610,9 @@
 
             selectedInjuries = Array.isArray(p.selectedInjuries) ? p.selectedInjuries : [];
             document.getElementById('clinicalNotes').value = p.clinicalNotes || '';
+            if (p.rmBench !== undefined && document.getElementById('rmBench')) document.getElementById('rmBench').value = p.rmBench;
+            if (p.rmSquat !== undefined && document.getElementById('rmSquat')) document.getElementById('rmSquat').value = p.rmSquat;
+            if (p.rmDeadlift !== undefined && document.getElementById('rmDeadlift')) document.getElementById('rmDeadlift').value = p.rmDeadlift;
             currentWeightLogs = p.weightLogs || [];
             if (p.workoutPlan) weeklyWorkoutPlan = p.workoutPlan;
             workoutSessionHistory = Array.isArray(p.workoutSessionHistory) ? p.workoutSessionHistory : [];
@@ -6495,6 +6661,12 @@
             applyStateToScreen(p);
             onInjuryChange();
             calculateAll();
+            // Đảm bảo mức tạ 1RM của hồ sơ được liên kết và cập nhật đầy đủ sang lịch tập
+            if (typeof autoFillWeightsFrom1RM === 'function') {
+                autoFillWeightsFrom1RM({ silent: true });
+            }
+            if (typeof renderCurrentDayWorkout === 'function') renderCurrentDayWorkout();
+            if (typeof renderDaySelector === 'function') renderDaySelector();
         }
 
         function deleteProfile() {
@@ -6763,6 +6935,7 @@
         }
 
         function renderWeightChart() {
+            if (typeof Chart === 'undefined') return;
             const canvas = document.getElementById('weightChart');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
@@ -8366,13 +8539,9 @@
                 const m = String(ex.note).match(/(\d+(?:\.\d+)?)\s*kg/i);
                 if (m) return parseFloat(m[1]);
             }
-            const libEx = EXERCISE_LIBRARY.find(e => e.id === ex.id || e.name === ex.name);
-            if (libEx && libEx.rmRef) {
-                const bench1RM = parseFloat(document.getElementById('rmBench')?.value) || 100;
-                const squat1RM = parseFloat(document.getElementById('rmSquat')?.value) || 120;
-                const dead1RM = parseFloat(document.getElementById('rmDeadlift')?.value) || 150;
-                const baseRM = libEx.rmRef === 'bench' ? bench1RM : (libEx.rmRef === 'squat' ? squat1RM : dead1RM);
-                return Math.round((baseRM * (libEx.rmRatio || 0.7)) / 2.5) * 2.5;
+            if (typeof calculateExerciseWeightFrom1RM === 'function') {
+                const res = calculateExerciseWeightFrom1RM(ex);
+                if (res && res.weightKg > 0) return res.weightKg;
             }
             return 0;
         }
@@ -10538,6 +10707,218 @@
         }
     });
 })();
+
+    
+        // =========================================================================
+        // HỆ THỐNG TAB CON (SUB-TABS) CHO 5 TAB CHÍNH: DINH DƯỠNG / BỆNH LÝ / LỊCH TẬP / TIẾN ĐỘ / CÀI ĐẶT
+        // =========================================================================
+        const SUB_TAB_CONFIG = {
+            nutrition: {
+                items: [
+                    { key: 'n1', num: '1.1', icon: '📏', label: 'Chỉ số Cơ thể (TDEE)', ids: ['cardBodyMetrics'] },
+                    { key: 'n2', num: '1.2', icon: '🎯', label: 'Tỷ lệ & Mục tiêu Macro', ids: ['cardMacroSliders', 'cardMacroTargetSummary'] },
+                    { key: 'n3', num: '1.3', icon: '🥗', label: 'Chọn Thực phẩm & Quy đổi', ids: ['cardFoodBuilder'] },
+                    { key: 'n4', num: '1.4', icon: '🍽️', label: 'Thực đơn Từng bữa', ids: ['cardMealByMealPlan'] }
+                ],
+                grids: [['nutritionLeftTechCol', 'nutritionRightMainCol']]
+            },
+            injury: {
+                items: [
+                    { key: 'i1', num: '2.1', icon: '🩺', label: 'Sàng lọc Bệnh lý & Chấn thương', ids: ['injuryCheckboxContainer'] },
+                    { key: 'i2', num: '2.2', icon: '📝', label: 'Ghi chú Lâm sàng & Ngưỡng RPE', ids: ['injuryNotesRpeBlock'] },
+                    { key: 'i3', num: '2.3', icon: '⚠️', label: 'Bài tập cần lưu ý', ids: ['injuryAffectedBlock'] }
+                ],
+                grids: []
+            },
+            workout: {
+                items: [
+                    { key: 'w1', num: '3.1', icon: '🏋️', label: 'Buổi tập hôm nay', ids: ['activeInjuryBannerWorkout', 'cardWorkoutSchedule'] },
+                    { key: 'w2', num: '3.2', icon: '🧮', label: 'Máy tính tạ 1RM', ids: ['card1RMCalculator'], autoOpen: ['card1RMCalculator'] },
+                    { key: 'w3', num: '3.3', icon: '📊', label: 'Volume Radar tuần', ids: ['weeklyVolumeMiniDashboard'] },
+                    { key: 'w4', num: '3.4', icon: '🏆', label: 'Lịch sử tập & Kỷ lục (PR)', ids: ['cardWorkoutSessionHistory'], autoOpen: ['cardWorkoutSessionHistory'] },
+                    { key: 'w5', num: '3.5', icon: '📚', label: () => `Thư viện ${(typeof EXERCISE_LIBRARY !== 'undefined' && EXERCISE_LIBRARY.length) || ''} bài tập`, ids: ['cardExerciseLibrary'], autoOpen: ['cardExerciseLibrary'] }
+                ],
+                grids: []
+            },
+            cost: {
+                items: [
+                    { key: 'c1', num: '4.1', icon: '📸', label: 'Check-in & Before/After', ids: ['cardCheckinBeforeAfter'] },
+                    { key: 'c2', num: '4.2', icon: '📉', label: 'Biểu đồ Cân nặng', ids: ['cardWeightTracker'] },
+                    { key: 'c3', num: '4.3', icon: '📏', label: 'Số đo 3 vòng', ids: ['cardBodyMeasurements'] },
+                    { key: 'c4', num: '4.4', icon: '🛒', label: 'Chi phí & Đi chợ 7 ngày', ids: ['cardShoppingCost'] },
+                    { key: 'c5', num: '4.5', icon: '🏷️', label: 'Bảng đơn giá', ids: ['cardPriceEditor'], autoOpen: ['cardPriceEditor'] }
+                ],
+                grids: [['costLeftCol', 'costRightCol']]
+            },
+            settings: {
+                items: [
+                    { key: 's1', num: '5.1', icon: '☁️', label: 'Đồng bộ Đám mây (Firebase)', ids: ['cardCloudSync'] },
+                    { key: 's2', num: '5.2', icon: '🛡️', label: 'Ma trận Phân quyền', ids: ['cardPermissionsMatrix'] },
+                    { key: 's3', num: '5.3', icon: '👥', label: 'Quản lý Tài khoản', ids: ['cardAccountsManager'] }
+                ],
+                grids: [['cardPermissionsMatrix', 'cardAccountsManager']]
+            }
+        };
+
+        let activeSubTabs = (() => {
+            const defaults = { nutrition: 'n1', injury: 'i1', workout: 'w1', cost: 'c1', settings: 's1' };
+            try { return { ...defaults, ...(JSON.parse(localStorage.getItem('macro_subtabs_v11b') || '{}')) }; }
+            catch (e) { return defaults; }
+        })();
+
+        function renderSubTabBars() {
+            Object.keys(SUB_TAB_CONFIG).forEach(tab => {
+                const bar = document.getElementById('subTabBar_' + tab);
+                if (!bar) return;
+                const cfg = SUB_TAB_CONFIG[tab];
+                bar.innerHTML = `
+                    <div class="subtab-scroller flex gap-1.5 overflow-x-auto snap-x bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm" role="tablist">
+                        ${cfg.items.map(it => {
+                            const label = typeof it.label === 'function' ? it.label() : it.label;
+                            return `
+                            <button type="button" role="tab" id="subTabBtn_${it.key}" onclick="switchSubTab('${tab}', '${it.key}')"
+                                class="subtab-btn snap-start flex-shrink-0 sm:flex-1 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 border border-transparent hover:bg-orange-50 transition flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                <span class="subtab-num text-[10px] font-extrabold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-md">${it.num}</span>
+                                <span>${it.icon} ${label}</span>
+                            </button>`;
+                        }).join('')}
+                    </div>`;
+            });
+        }
+
+        function applySubTab(tab) {
+            const cfg = SUB_TAB_CONFIG[tab];
+            if (!cfg) return;
+            // Tab con "khả dụng" = có ít nhất 1 khối không bị ẩn bởi logic khác (VD: chế độ Học viên Tinh gọn ẩn 1RM / Volume Radar)
+            const isBlockAvailable = (el) => {
+                if (!el) return false;
+                for (let n = el; n && !(n.id || '').startsWith('tabContent_'); n = n.parentElement) {
+                    if (n.classList.contains('hidden')) return false;
+                }
+                return true;
+            };
+            const available = cfg.items.filter(it => it.ids.some(id => isBlockAvailable(document.getElementById(id))));
+            let activeKey = activeSubTabs[tab];
+            if (!available.some(it => it.key === activeKey)) activeKey = (available[0] || cfg.items[0]).key;
+
+            // 1. Ẩn/hiện các khối nội dung thuộc từng tab con
+            cfg.items.forEach(it => {
+                const isActive = it.key === activeKey;
+                it.ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.toggle('subtab-hidden', !isActive);
+                });
+                const btn = document.getElementById('subTabBtn_' + it.key);
+                if (btn) {
+                    btn.classList.toggle('hidden', !available.includes(it));
+                    btn.classList.toggle('subtab-active', isActive);
+                    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                }
+                if (isActive && Array.isArray(it.autoOpen)) {
+                    it.autoOpen.forEach(id => { const d = document.getElementById(id); if (d && d.tagName === 'DETAILS') d.open = true; });
+                }
+            });
+
+            // 2. Tự co giãn bố cục cột: cột trống thì ẩn, cột còn lại chiếm toàn bộ chiều ngang
+            (cfg.grids || []).forEach(cols => {
+                const colEls = cols.map(id => document.getElementById(id)).filter(Boolean);
+                colEls.forEach(col => {
+                    col.classList.remove('subtab-col-hidden', 'subtab-fullwidth');
+                    const hasVisibleChild = Array.from(col.children).some(ch =>
+                        !ch.classList.contains('subtab-hidden') && !ch.classList.contains('hidden'));
+                    if (!hasVisibleChild) col.classList.add('subtab-col-hidden');
+                });
+                const visibleCols = colEls.filter(col =>
+                    !col.classList.contains('subtab-hidden') && !col.classList.contains('subtab-col-hidden') && !col.classList.contains('hidden'));
+                if (visibleCols.length === 1) visibleCols[0].classList.add('subtab-fullwidth');
+                // Ẩn luôn khung lưới bao ngoài nếu không còn cột nào hiển thị (tránh khoảng trống thừa)
+                const wrap = colEls[0] && colEls[0].parentElement;
+                if (wrap && !(wrap.id || '').startsWith('tabContent_')) {
+                    wrap.classList.toggle('subtab-col-hidden', visibleCols.length === 0);
+                }
+            });
+        }
+
+        function refreshAllSubTabs() {
+            Object.keys(SUB_TAB_CONFIG).forEach(applySubTab);
+        }
+
+        function switchSubTab(tab, key, opts = {}) {
+            if (!SUB_TAB_CONFIG[tab]) return;
+            activeSubTabs[tab] = key;
+            try { localStorage.setItem('macro_subtabs_v11b', JSON.stringify(activeSubTabs)); } catch (e) {}
+            applySubTab(tab);
+
+            // Biểu đồ Chart.js vẽ khi đang bị ẩn sẽ có kích thước 0 → vẽ lại khi mở tab con 4.2
+            if (key === 'c2') {
+                setTimeout(() => {
+                    try { if (typeof renderWeightChart === 'function') renderWeightChart(); } catch (e) {}
+                    window.dispatchEvent(new Event('resize'));
+                }, 30);
+            }
+            if (key === 'w3' && typeof renderWeeklyVolumeDashboard === 'function') {
+                try { renderWeeklyVolumeDashboard(); } catch (e) {}
+            }
+            if (key === 'w1' && typeof renderDaySelector === 'function') {
+                try { renderDaySelector(); } catch (e) {}
+            }
+
+            if (!opts.silentScroll) {
+                const bar = document.getElementById('subTabBar_' + tab);
+                const btn = document.getElementById('subTabBtn_' + key);
+                try { btn && btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); } catch (e) {}
+                if (bar && bar.getBoundingClientRect().top < 0) {
+                    window.scrollTo({ top: window.scrollY + bar.getBoundingClientRect().top - 80, behavior: 'smooth' });
+                }
+            }
+        }
+
+        // Tự động chuyển đúng tab con khi một nút tắt (VD: "🍜 Lỡ ăn ngoài") cuộn/focus tới khối đang bị ẩn
+        function revealSubTabForElement(el) {
+            if (!el || !el.closest) return;
+            if (!el.closest('.subtab-hidden, .subtab-col-hidden')) return;
+            const tabContent = el.closest('[id^="tabContent_"]');
+            if (!tabContent || tabContent.classList.contains('hidden')) return;
+            const tab = tabContent.id.replace('tabContent_', '');
+            const cfg = SUB_TAB_CONFIG[tab];
+            if (!cfg) return;
+            const target = cfg.items.find(it => it.ids.some(id => {
+                const sec = document.getElementById(id);
+                return sec && sec.contains(el);
+            }));
+            if (target) switchSubTab(tab, target.key, { silentScroll: true });
+        }
+
+        ['scrollIntoView', 'focus'].forEach(fnName => {
+            const original = HTMLElement.prototype[fnName];
+            if (typeof original !== 'function') return;
+            HTMLElement.prototype[fnName] = function (...args) {
+                try { revealSubTabForElement(this); } catch (e) {}
+                return original.apply(this, args);
+            };
+        });
+
+        // Bổ sung tham số tab con cho switchMainTab(tab, subKey) & đồng bộ bố cục sau khi đổi chế độ Học viên Tinh gọn
+        if (typeof switchMainTab === 'function') {
+            const _origSwitchMainTab = switchMainTab;
+            switchMainTab = function (activeTab, subKey) {
+                const r = _origSwitchMainTab.apply(this, arguments);
+                if (subKey && SUB_TAB_CONFIG[activeTab]) switchSubTab(activeTab, subKey, { silentScroll: true });
+                else applySubTab(activeTab);
+                return r;
+            };
+        }
+        if (typeof applyMemberSimpleModeUI === 'function') {
+            const _origApplySimple = applyMemberSimpleModeUI;
+            applyMemberSimpleModeUI = function () {
+                const r = _origApplySimple.apply(this, arguments);
+                try { refreshAllSubTabs(); } catch (e) {}
+                return r;
+            };
+        }
+
+        renderSubTabBars();
+        refreshAllSubTabs();
 
     </script>
 </body>
