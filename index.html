@@ -37,9 +37,14 @@
         input[type="range"] { accent-color: #ea580c; }
         .tab-active { background: linear-gradient(135deg, #ea580c, #f97316); color: #ffffff !important; border-color: #ea580c; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25); }
         .day-active { background-color: #ea580c !important; color: #ffffff !important; border-color: #c2410c !important; }
-        /* Làm dịu khung cảnh báo chấn thương: Không nhấp nháy gắt gây hoang mang tâm lý */
+        /* Làm dịu khung cảnh báo chấn thương: Chu kỳ nhịp thở 3.5s dịu mắt và sang trọng */
         .danger-pulse {
+            animation: dangerPulseSoft 3.5s infinite ease-in-out;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        @keyframes dangerPulseSoft {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); }
+            50% { box-shadow: 0 0 0 5px rgba(225, 29, 72, 0.14); }
         }
         .caution-amber-card {
             background-color: rgba(254, 243, 199, 0.55) !important;
@@ -58,8 +63,19 @@
             border-color: #f43f5e !important;
         }
 
-        /* === QUY TẮC PHỐI MÀU 60 - 30 - 10 & GIẢM MỎI MẮT THỊ GIÁC (VISUAL FATIGUE REDUCTION) === */
+        /* =========================================================================
+           HỆ MÀU TỐI ƯU HÓA TOÀN CỤC v11.5 (CLEAN DAYLIGHT & OBSIDIAN GYM DARK)
+           ========================================================================= */
+
         :root {
+            --bg-app: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-muted: #f1f5f9;
+            --border-subtle: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #475569;
+            --accent-primary: #ea580c;
             --bg-60-light: #f8fafc;
             --surface-60-light: #ffffff;
             --bg-60-obsidian: #090d16;
@@ -67,16 +83,39 @@
             --structure-30-border: #e2e8f0;
             --structure-30-text: #475569;
             --accent-10-cta: #ea580c;
-            /* 4 Màu Ngữ Nghĩa Cố Định Cho Dinh Dưỡng (Semantic Macro Colors) */
             --macro-protein-rose: #f43f5e;
             --macro-carbs-emerald: #10b981;
             --macro-fat-amber: #f59e0b;
             --macro-water-sky: #0ea5e9;
         }
-        html.dark body {
-            background-color: #090d16 !important;
-            color: #f1f5f9 !important;
+
+        /* 1. LÀM DỊU MÀU SẮC Ở CHẾ ĐỘ SÁNG (Gom các màu lẻ Indigo/Teal/Pink/Lime về tông trung tính) */
+        html:not(.dark) body {
+            background-color: var(--bg-app) !important;
+            color: var(--text-primary) !important;
         }
+
+        /* Tăng độ đậm cho chữ phụ ở Light Mode để không bị nhạt dưới nắng/đèn sáng */
+        html:not(.dark) .text-slate-500 { color: #475569 !important; }
+        html:not(.dark) .text-slate-400 { color: #64748b !important; }
+
+        /* Chuẩn hóa viền các thẻ sang Xám Đá thanh lịch thay vì viền cam/hồng/xanh tràn lan */
+        html:not(.dark) .bg-white {
+            background-color: var(--bg-card) !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04) !important;
+        }
+
+        /* Làm dịu các hộp thông báo phụ (Indigo, Teal, Lime) về nền trung tính pha sắc nhẹ */
+        html:not(.dark) .bg-indigo-50,
+        html:not(.dark) .bg-indigo-50\/70,
+        html:not(.dark) .bg-indigo-50\/80,
+        html:not(.dark) .bg-teal-50\/80,
+        html:not(.dark) .bg-lime-50 {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+
         /* Đồng bộ các thẻ phụ đa sắc về tông Xám Đá 30% (Slate-50 / Slate-200) dịu mắt */
         html:not(.dark) #mainAppContainer details.bg-indigo-50\/40,
         html:not(.dark) #mainAppContainer details.bg-teal-50\/40,
@@ -84,6 +123,155 @@
         html:not(.dark) #mainAppContainer details.bg-purple-50\/40 {
             background-color: #ffffff !important;
             border-color: #e2e8f0 !important;
+        }
+
+        /* 2. CHẾ ĐỘ TỐI (OBSIDIAN GYM HUD) - TƯƠNG PHẢN CAO, CHỐNG MỜ CHỮ TUYỆT ĐỐI */
+        html.dark body {
+            background-color: #090d16 !important;
+            color: #f8fafc !important;
+        }
+
+        /* Phân tầng 3 lớp độ sâu nền trong Dark Mode */
+        html.dark .bg-white,
+        html.dark .floating-action-bar {
+            background-color: #111827 !important; /* Lớp 1: Mặt thẻ chính */
+            border-color: #26334d !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        html.dark .bg-slate-50,
+        html.dark .bg-slate-100,
+        html.dark .bg-white\/80,
+        html.dark .bg-white\/90 {
+            background-color: #1e293b !important; /* Lớp 2: Khối con / Hộp thông tin */
+            border-color: #334155 !important;
+        }
+
+        html.dark .bg-slate-200 {
+            background-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        /* Đảo ngược toàn bộ thang chữ Xám Đá sang Trắng & Bạc sáng rõ */
+        html.dark .text-slate-900,
+        html.dark .text-slate-800 {
+            color: #ffffff !important;
+        }
+        html.dark .text-slate-700,
+        html.dark .text-slate-600 {
+            color: #e2e8f0 !important;
+        }
+        html.dark .text-slate-500,
+        html.dark .text-slate-400 {
+            color: #cbd5e1 !important;
+        }
+
+        /* Ô nhập liệu (Input / Select / Textarea) nổi khối rõ ràng, dễ bấm */
+        html.dark input:not([type="checkbox"]):not([type="radio"]),
+        html.dark select,
+        html.dark textarea {
+            background-color: #090d16 !important; /* Lớp 3: Ô nhập sâu xuống */
+            color: #ffffff !important;
+            border-color: #475569 !important;
+        }
+        html.dark input:focus,
+        html.dark select:focus,
+        html.dark textarea:focus {
+            border-color: #f97316 !important;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25) !important;
+        }
+        html.dark input::placeholder,
+        html.dark textarea::placeholder {
+            color: #94a3b8 !important;
+            opacity: 1 !important;
+        }
+
+        /* 3. CHUẨN HÓA 4 MÀU MACRO & KHỐI TRẠNG THÁI TRONG DARK MODE */
+        /* Đạm (Protein - Đỏ Coral sáng) */
+        html.dark .bg-red-50,
+        html.dark .bg-red-50\/70,
+        html.dark .bg-rose-50,
+        html.dark .bg-rose-50\/70 {
+            background-color: rgba(225, 29, 72, 0.14) !important;
+            border-color: rgba(251, 113, 133, 0.4) !important;
+        }
+        html.dark .text-red-600,
+        html.dark .text-red-700,
+        html.dark .text-red-800,
+        html.dark .text-red-900,
+        html.dark .text-rose-600,
+        html.dark .text-rose-700,
+        html.dark .text-rose-800,
+        html.dark .text-rose-900 {
+            color: #fda4af !important;
+        }
+
+        /* Tinh bột (Carbs / Hoàn thành - Xanh Ngọc lục bảo sáng) */
+        html.dark .bg-emerald-50,
+        html.dark .bg-emerald-50\/70,
+        html.dark .bg-lime-50 {
+            background-color: rgba(16, 185, 129, 0.14) !important;
+            border-color: rgba(52, 211, 153, 0.4) !important;
+        }
+        html.dark .text-emerald-600,
+        html.dark .text-emerald-700,
+        html.dark .text-emerald-800,
+        html.dark .text-emerald-900,
+        html.dark .text-lime-700,
+        html.dark .text-lime-800,
+        html.dark .text-lime-900 {
+            color: #6ee7b7 !important;
+        }
+
+        /* Chất béo (Fat / Lưu ý - Vàng Hổ phách sáng) */
+        html.dark .bg-amber-50,
+        html.dark .bg-amber-50\/70,
+        html.dark .bg-amber-50\/80,
+        html.dark .bg-orange-50,
+        html.dark .bg-orange-50\/70,
+        html.dark .bg-orange-50\/80 {
+            background-color: rgba(245, 158, 11, 0.14) !important;
+            border-color: rgba(251, 191, 36, 0.4) !important;
+        }
+        html.dark .text-amber-600,
+        html.dark .text-amber-700,
+        html.dark .text-amber-800,
+        html.dark .text-amber-900,
+        html.dark .text-orange-600,
+        html.dark .text-orange-700,
+        html.dark .text-orange-800,
+        html.dark .text-orange-900 {
+            color: #fdba74 !important;
+        }
+
+        /* Nước & Đồng bộ Cloud (Xanh Sky / Indigo sáng) */
+        html.dark .bg-sky-50,
+        html.dark .bg-sky-50\/80,
+        html.dark .bg-indigo-50,
+        html.dark .bg-indigo-50\/70,
+        html.dark .bg-indigo-50\/80,
+        html.dark .bg-teal-50\/80 {
+            background-color: rgba(14, 165, 233, 0.14) !important;
+            border-color: rgba(56, 189, 248, 0.4) !important;
+        }
+        html.dark .text-sky-600,
+        html.dark .text-sky-700,
+        html.dark .text-sky-800,
+        html.dark .text-sky-900,
+        html.dark .text-indigo-600,
+        html.dark .text-indigo-700,
+        html.dark .text-indigo-900,
+        html.dark .text-teal-900 {
+            color: #7dd3fc !important;
+        }
+
+        /* Đường kẻ bảng & phân cách trong Dark Mode */
+        html.dark .border-slate-100,
+        html.dark .border-slate-200,
+        html.dark .border-slate-300,
+        html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+        html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+            border-color: #26334d !important;
         }
         .locked-field { opacity: 0.65; pointer-events: none; background-color: #f1f5f9 !important; }
         /* Mobile Stepper cho Thực đơn */
@@ -475,82 +663,57 @@
             color: #fca5a5 !important;
         }
 
-        html.dark input:not([type="checkbox"]):not([type="radio"]), 
-        html.dark select, 
-        html.dark textarea {
-            background-color: #0b0f19 !important;
-            color: #f8fafc !important;
+        /* =========================================================================
+           FIX TRIỆT ĐỂ NỀN GRADIENT SÁNG & VÒNG TRÒN TIẾN ĐỘ TRONG DARK MODE
+           ========================================================================= */
+
+        /* 1. Chuyển nền thẻ Tóm tắt Học viên (#memberTodayActionCard) sang Gradient Tối */
+        html.dark #memberTodayActionCard,
+        html.dark .from-orange-50,
+        html.dark .via-white,
+        html.dark .to-amber-50\/70 {
+            background-image: linear-gradient(135deg, #111827 0%, #0f172a 60%, #1e1b18 100%) !important;
+            background-color: #111827 !important;
+            border-color: #ea580c !important;
+        }
+
+        /* Đảm bảo dòng tiêu đề chào Học viên hiển thị trắng sắc nét trên nền tối mới */
+        html.dark #todayActionGreetingTitle {
+            color: #ffffff !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Làm dịu đường kẻ ngang và các nút phụ trên thanh tiêu đề Học viên */
+        html.dark #memberTodayActionCard .border-orange-200\/70 {
             border-color: #334155 !important;
         }
-        html.dark input::placeholder,
-        html.dark textarea::placeholder {
-            color: #64748b !important;
+        html.dark #todayActionTimeBadge {
+            background-color: rgba(234, 88, 12, 0.2) !important;
+            color: #fdba74 !important;
+            border: 1px solid rgba(251, 146, 60, 0.4) !important;
         }
-/* === FIX ĐỘ TƯƠNG PHẢN CHỮ DARK MODE (HIGH-CONTRAST SLATE) === */
-html.dark body {
-    background-color: #090d16 !important;
-    color: #f8fafc !important;
-}
 
-/* 1. Nền các khung Card chính & Phụ: Tách lớp rõ ràng trên nền tối */
-html.dark .bg-white {
-    background-color: #111827 !important; /* Nền card nổi bật hơn nền body */
-    border-color: #334155 !important;
-}
-html.dark .bg-slate-50,
-html.dark .bg-slate-100 {
-    background-color: #1e293b !important; /* Nền ô phụ sáng vừa phải */
-    border-color: #475569 !important;
-}
+        /* 2. Xử lý các khối có dùng bg-gradient sáng khác trong toàn ứng dụng */
+        html.dark .from-amber-50,
+        html.dark .from-emerald-50,
+        html.dark .from-sky-50,
+        html.dark .from-indigo-50 {
+            background-image: none !important;
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
 
-/* 2. Đảo chiều độ sáng toàn bộ chữ Xám Đá (Chống mờ chữ tuyệt đối) */
-html.dark .text-slate-900,
-html.dark .text-slate-800 {
-    color: #ffffff !important; /* Trắng tinh cho tiêu đề & số kg/calo */
-}
-html.dark .text-slate-700,
-html.dark .text-slate-600 {
-    color: #e2e8f0 !important; /* Xám bạc rất sáng cho nội dung & tên bài tập */
-}
-html.dark .text-slate-500,
-html.dark .text-slate-400 {
-    color: #cbd5e1 !important; /* Xám sáng rõ cho ghi chú & đơn vị nhỏ */
-}
-
-/* 3. Làm rõ chữ trong các ô Input, Select và Placeholder */
-html.dark input:not([type="checkbox"]):not([type="radio"]),
-html.dark select,
-html.dark textarea {
-    background-color: #0f172a !important;
-    color: #ffffff !important;
-    border-color: #475569 !important;
-}
-html.dark input::placeholder,
-html.dark textarea::placeholder {
-    color: #94a3b8 !important; /* Tăng độ sáng placeholder từ #64748b lên #94a3b8 */
-    opacity: 1 !important;
-}
-
-/* 4. Tăng độ sáng cho các nhãn màu (Cam, Đỏ, Xanh) để không bị chìm trên nền tối */
-html.dark .text-orange-600,
-html.dark .text-orange-700,
-html.dark .text-orange-800 {
-    color: #fb923c !important; /* Orange-400 sáng rực */
-}
-html.dark .text-emerald-600,
-html.dark .text-emerald-700,
-html.dark .text-emerald-800 {
-    color: #34d399 !important; /* Emerald-400 */
-}
-html.dark .text-red-600,
-html.dark .text-red-700,
-html.dark .text-red-800 {
-    color: #f87171 !important; /* Red-400 */
-}
-html.dark .text-indigo-600,
-html.dark .text-indigo-700 {
-    color: #818cf8 !important; /* Indigo-400 */
-}
+        /* 3. Sửa tâm Vòng tròn Tiến độ (Activity Rings) không bị nền trắng làm chìm chữ "0% HÔM NAY" */
+        html.dark #memberTodayActionCard svg text,
+        html.dark #memberTodayActionCard .ring-center-label {
+            fill: #ffffff !important;
+            color: #ffffff !important;
+        }
+        html.dark #memberTodayActionCard .rounded-full.bg-white,
+        html.dark #memberTodayActionCard .rounded-full.bg-slate-50 {
+            background-color: #090d16 !important;
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -993,6 +1156,27 @@ html.dark .text-indigo-700 {
                         <div>
                             <label class="block text-xs text-orange-600 font-bold mb-1">Cân nặng hiện tại (kg)</label>
                             <input type="number" id="weight" value="72" min="30" max="200" step="0.5" oninput="calculateAll()" class="w-full bg-orange-50 border border-orange-400 rounded-lg p-2 text-xs font-extrabold text-orange-700 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- 🚺 THEO DÕI SINH LÝ & CHU KỲ NĂNG LƯỢNG (DÀNH CHO HỌC VIÊN NỮ - LUTEAL PHASE) -->
+                    <div id="femaleCycleTrackerBox" class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-sm">🚺</span>
+                                <div>
+                                    <div class="font-extrabold text-slate-800">Theo dõi Sinh lý &amp; Chu kỳ Nữ (Luteal Phase)</div>
+                                    <div class="text-[10px] text-slate-500">Chống báo động giả chững cân do tích nước 1–2kg &amp; bảo vệ khớp</div>
+                                </div>
+                            </div>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="chkFemaleLutealPhase" onchange="toggleFemaleLutealPhase(this.checked)" class="w-4 h-4 accent-rose-500 rounded cursor-pointer">
+                                <span class="ml-1.5 text-[11px] font-bold text-rose-600">Đang trong kỳ / Tiền kinh nguyệt</span>
+                            </label>
+                        </div>
+                        <div id="femaleLutealAdviceBanner" class="hidden p-2.5 rounded-lg bg-rose-50/80 border border-rose-200 text-rose-900 text-[11px] leading-relaxed space-y-1">
+                            <div>🌸 <strong>Chế độ Sinh lý Nữ đang bật:</strong> Giai đoạn hoàng thể / kỳ kinh nguyệt thường gây giữ nước tự nhiên (+1 đến 2kg). Hệ thống đã <strong>tắt báo động giả Chững cân (Plateau)</strong> trên biểu đồ.</div>
+                            <div>🥩 <strong>Gợi ý Dinh dưỡng &amp; Tập luyện:</strong> Ưu tiên thực phẩm giàu <strong>Sắt &amp; Magie</strong> (thịt bò nạc, cá hồi, rau bina, hạt điều/hạnh nhân, chuối) giảm chuột rút; giữ mức tạ kiểm soát <strong>RPE 7–7.5</strong> thay vì ép phá kỷ lục PR tuần này.</div>
                         </div>
                     </div>
 
@@ -1555,6 +1739,33 @@ html.dark .text-indigo-700 {
                         </div>
                     </div>
 
+                    <!-- 🍱 CHẾ ĐỘ "NẤU ĂN CHO CẢ GIA ĐÌNH" (FAMILY MEAL PREP MULTIPLIER - KHÔNG CẦN NẤU 2 NỒI RIÊNG) -->
+                    <div id="familyMealPrepControlBar" class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs no-print">
+                        <div class="flex items-start sm:items-center gap-2">
+                            <span class="text-lg">🍱</span>
+                            <div>
+                                <div class="font-extrabold text-slate-800 flex items-center gap-1.5 flex-wrap">
+                                    <span>Chế độ "Nấu Ăn Chung Cả Gia Đình" (Family Meal Multiplier)</span>
+                                    <span id="familyMealStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-bold">Đang tắt (Khẩu phần cá nhân)</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500">Nấu chung 1 nồi thịt luộc/rang nhạt hoặc cá hấp với cả nhà — App sẽ chỉ rõ bạn cần gắp mấy miếng / mấy lạng chín ra bát riêng!</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <label class="text-[11px] font-bold text-slate-600">Số người ăn:</label>
+                            <select id="familyMemberCountSelect" onchange="onFamilyMealConfigChange()" class="bg-white border border-slate-300 rounded-xl px-2 py-1 text-xs font-extrabold text-slate-800 outline-none">
+                                <option value="2">👨‍👩‍👦 2 người</option>
+                                <option value="3">👨‍👩‍👦 3 người</option>
+                                <option value="4" selected>👨‍👩‍👧‍👦 4 người (Chuẩn)</option>
+                                <option value="5">👨‍👩‍👧‍👦 5 người</option>
+                                <option value="6">👨‍👩‍👧‍👦 6 người</option>
+                            </select>
+                            <button type="button" id="btnToggleFamilyMealMode" onclick="toggleFamilyMealPrepMode()" class="px-3 py-1.5 rounded-xl font-extrabold text-xs border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 transition shadow-2xs">
+                                🍱 Bật Nồi Gia Đình
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- BẢNG QUY TẮC ƯỚC LƯỢNG BÀN TAY & CHÉN BÁT (HIỂN THỊ KHI BẬT CHẾ ĐỘ ✋ ƯỚC LƯỢNG) -->
                     <div id="householdPortionLegendBanner" class="hidden bg-gradient-to-r from-amber-50 via-orange-50/80 to-emerald-50/70 border-2 border-amber-300 rounded-2xl p-3.5 text-xs space-y-2">
                         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -1830,6 +2041,64 @@ html.dark .text-indigo-700 {
                     </p>
                 </div>
 
+                <!-- 🚦 CHỈ SỐ SẴN SÀNG TẬP LUYỆN ĐẦU NGÀY (DAILY READINESS & BIO-FEEDBACK CHECK 3 GIÂY) -->
+                <div id="dailyReadinessBioCard" class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5 text-xs no-print">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🚦</span>
+                            <div>
+                                <div class="font-extrabold text-slate-800 flex items-center gap-1.5 flex-wrap">
+                                    <span>Chỉ số Sẵn sàng Tập luyện Đầu ngày (Bio-Feedback 3 giây)</span>
+                                    <span id="readinessScoreBadge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">Sẵn sàng 100% • Tập chuẩn giáo án</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500">Chạm chọn nhanh cảm nhận cơ thể hôm nay để hệ thống tự động điều chỉnh khối lượng (Auto-Regulation)</p>
+                            </div>
+                        </div>
+                        <button type="button" id="btnAutoRegulateSession" onclick="toggleDailyAutoRegulation()" class="hidden px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-extrabold rounded-xl text-[11px] shadow-sm transition">
+                            🛡️ Bật Giảm Tải 1 Buổi (-1 Hiệp &amp; RPE 7)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <!-- 1. DOMS -->
+                        <div class="bg-white p-2 rounded-xl border border-slate-200 flex items-center justify-between gap-1.5">
+                            <span class="font-bold text-slate-700 text-[11px] whitespace-nowrap">💪 Đau cơ (DOMS):</span>
+                            <div class="flex items-center gap-1">
+                                <button type="button" id="bioDoms_good" onclick="setBioReadinessFactor('doms', 'good')" class="px-2 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-600 text-white transition">😊 Êm ái</button>
+                                <button type="button" id="bioDoms_mid" onclick="setBioReadinessFactor('doms', 'mid')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">😐 Hơi mỏi</button>
+                                <button type="button" id="bioDoms_low" onclick="setBioReadinessFactor('doms', 'low')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">😣 Đau căng</button>
+                            </div>
+                        </div>
+                        <!-- 2. Sleep -->
+                        <div class="bg-white p-2 rounded-xl border border-slate-200 flex items-center justify-between gap-1.5">
+                            <span class="font-bold text-slate-700 text-[11px] whitespace-nowrap">😴 Giấc ngủ:</span>
+                            <div class="flex items-center gap-1">
+                                <button type="button" id="bioSleep_good" onclick="setBioReadinessFactor('sleep', 'good')" class="px-2 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-600 text-white transition">😴 &gt;7h Sâu</button>
+                                <button type="button" id="bioSleep_mid" onclick="setBioReadinessFactor('sleep', 'mid')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">🥱 5-6h</button>
+                                <button type="button" id="bioSleep_low" onclick="setBioReadinessFactor('sleep', 'low')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">😵 &lt;5h Thiếu ngủ</button>
+                            </div>
+                        </div>
+                        <!-- 3. Energy -->
+                        <div class="bg-white p-2 rounded-xl border border-slate-200 flex items-center justify-between gap-1.5">
+                            <span class="font-bold text-slate-700 text-[11px] whitespace-nowrap">⚡ Năng lượng:</span>
+                            <div class="flex items-center gap-1">
+                                <button type="button" id="bioEnergy_good" onclick="setBioReadinessFactor('energy', 'good')" class="px-2 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-600 text-white transition">⚡ Sung sức</button>
+                                <button type="button" id="bioEnergy_mid" onclick="setBioReadinessFactor('energy', 'mid')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">🔋 Vừa phải</button>
+                                <button type="button" id="bioEnergy_low" onclick="setBioReadinessFactor('energy', 'low')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">🪫 Mệt rã rời</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="bioReadinessAutoRegBanner" class="hidden p-2.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
+                        <div id="bioReadinessAutoRegText">
+                            ⚠️ <strong>Phát hiện cơ thể thiếu ngủ / mệt mỏi:</strong> Hệ thống khuyên bật <strong>Giảm tải 1 buổi (Auto-Regulation)</strong>: giữ nguyên bài tập nhưng giảm 1 hiệp mỗi bài và lùi trần RPE xuống 7 để bảo vệ thần kinh &amp; khớp!
+                        </div>
+                        <button type="button" onclick="applyOneClickBioAutoRegulation()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-extrabold rounded-lg whitespace-nowrap shadow-2xs">
+                            ⚡ Áp dụng Giảm 1 Hiệp &amp; RPE 7 ngay
+                        </button>
+                    </div>
+                </div>
+
                 <!-- BỘ ĐIỀU KHIỂN CHẾ ĐỘ PHÂN BỔ LỊCH TẬP (PERIODIZATION SPLIT CONTROLLER) -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 p-3 bg-gradient-to-r from-slate-50 to-orange-50/40 border border-slate-200 rounded-2xl text-xs no-print">
                     <div class="flex items-center gap-2 flex-wrap">
@@ -2057,12 +2326,24 @@ html.dark .text-indigo-700 {
                             💡 Nhập ít nhất 2 mốc cân nặng để hệ thống phân tích <strong>Xu hướng Trung bình trượt</strong> và gợi ý điều chỉnh Calo.
                         </div>
                         
-                        <div id="weightLogInputRow" class="grid grid-cols-1 sm:grid-cols-12 gap-2 no-print">
-                            <input type="date" id="logDate" class="sm:col-span-4 bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-xs outline-none">
-                            <input type="number" id="logWeight" placeholder="Số kg mới (VD: 71.2)" step="0.1" class="sm:col-span-5 bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs outline-none">
-                            <button onclick="addWeightLog()" class="sm:col-span-3 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold rounded-lg transition whitespace-nowrap">
-                                + Ghi nhận kg
-                            </button>
+                        <div id="weightLogInputRow" class="space-y-2 no-print">
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                                <input type="date" id="logDate" class="sm:col-span-4 bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-xs outline-none">
+                                <input type="number" id="logWeight" placeholder="Số kg mới (VD: 71.2)" step="0.1" class="sm:col-span-5 bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-extrabold text-slate-800 outline-none">
+                                <button onclick="addWeightLog()" class="sm:col-span-3 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold rounded-lg transition whitespace-nowrap">
+                                    + Ghi nhận kg
+                                </button>
+                            </div>
+                            <!-- NÚT CHỌN NHANH CẢM ỨNG (QUICK CHIPS) KHÔNG CẦN BẬT BÀN PHÍM ẢO TRÊN ĐIỆN THOẠI -->
+                            <div class="flex flex-wrap items-center justify-between gap-1.5 bg-slate-50 p-2 rounded-xl border border-slate-200 text-[11px]">
+                                <span class="text-slate-500 font-bold">👆 Chạm chỉnh nhanh từ mốc gần nhất (<strong id="quickWeightBaseLabel" class="text-slate-800">72.0kg</strong>):</span>
+                                <div class="flex items-center gap-1 flex-wrap">
+                                    <button type="button" onclick="adjustQuickWeightChip(-0.5)" class="px-2.5 py-1 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 rounded-lg font-extrabold transition shadow-2xs">-0.5kg</button>
+                                    <button type="button" onclick="adjustQuickWeightChip(-0.1)" class="px-2.5 py-1 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 rounded-lg font-extrabold transition shadow-2xs">-0.1kg</button>
+                                    <button type="button" onclick="adjustQuickWeightChip(0.1)" class="px-2.5 py-1 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 rounded-lg font-extrabold transition shadow-2xs">+0.1kg</button>
+                                    <button type="button" onclick="adjustQuickWeightChip(0.5)" class="px-2.5 py-1 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 rounded-lg font-extrabold transition shadow-2xs">+0.5kg</button>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
@@ -2189,7 +2470,17 @@ html.dark .text-indigo-700 {
                                     <input type="number" id="measThighInput" placeholder="56" step="0.5" class="w-full bg-white border border-slate-300 rounded-lg px-1.5 py-1.5 text-center font-bold text-slate-700 outline-none">
                                 </div>
                             </div>
-                            <button type="button" onclick="addBodyMeasurementLog()" class="w-full py-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl shadow-sm transition">
+                            <!-- NÚT CHỌN NHANH VÒNG EO (QUICK CHIPS) -->
+                            <div class="flex flex-wrap items-center justify-between gap-1 pt-1 text-[10px]">
+                                <span class="text-slate-500 font-bold">👆 Chỉnh nhanh Eo (cm) không cần gõ phím:</span>
+                                <div class="flex items-center gap-1">
+                                    <button type="button" onclick="adjustQuickWaistChip(-1.0)" class="px-2 py-0.5 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 rounded-md font-extrabold">-1.0cm</button>
+                                    <button type="button" onclick="adjustQuickWaistChip(-0.5)" class="px-2 py-0.5 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 rounded-md font-extrabold">-0.5cm</button>
+                                    <button type="button" onclick="adjustQuickWaistChip(0.5)" class="px-2 py-0.5 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 rounded-md font-extrabold">+0.5cm</button>
+                                    <button type="button" onclick="adjustQuickWaistChip(1.0)" class="px-2 py-0.5 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 rounded-md font-extrabold">+1.0cm</button>
+                                </div>
+                            </div>
+                            <button type="button" onclick="addBodyMeasurementLog()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl shadow-sm transition">
                                 📏 Lưu mốc số đo cơ thể
                             </button>
                         </div>
@@ -2902,12 +3193,15 @@ html.dark .text-indigo-700 {
                 <div id="focusExerciseWarningBox" class="hidden bg-red-950/90 border-2 border-red-500 text-red-200 rounded-2xl p-3 text-xs font-semibold"></div>
 
                 <!-- Cụm phím tắt công cụ ngay trên bài tập -->
-                <div class="grid grid-cols-3 gap-2 pt-1 text-xs font-bold">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs font-bold">
                     <button type="button" onclick="openPlateWarmupModalFromEx(currentFocusExIndex)" class="py-2 px-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-xl flex items-center justify-center gap-1 transition">
                         💿 Lắp bánh tạ
                     </button>
                     <button type="button" onclick="openFocusExerciseDemo()" class="py-2 px-2 bg-slate-800 hover:bg-slate-700 text-orange-300 border border-slate-700 rounded-xl flex items-center justify-center gap-1 transition">
                         🎥 Xem mẫu
+                    </button>
+                    <button type="button" onclick="openFormCheckModalFromEx(currentFocusExIndex)" class="py-2 px-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 rounded-xl flex items-center justify-center gap-1 transition" title="Quay hoặc gửi nhanh Video Check Form cho PT qua Zalo">
+                        📹 Check Form
                     </button>
                     <button type="button" onclick="quickSwapInFocusMode()" class="py-2 px-2 bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 rounded-xl flex items-center justify-center gap-1 transition">
                         🔀 Máy bận
@@ -2940,11 +3234,20 @@ html.dark .text-indigo-700 {
 
             <!-- DANH SÁCH CÁC HIỆP TẬP VỚI NÚT + / - CỰC LỚN DỄ BẤM KHI CẦM TẠ -->
             <div class="space-y-2.5">
-                <div class="flex justify-between items-center px-1">
+                <div class="flex flex-wrap justify-between items-center gap-2 px-1">
                     <span class="text-xs font-extrabold text-slate-300 uppercase tracking-wider">🏋️ Nhập tạ &amp; Tích hoàn thành hiệp:</span>
-                    <button type="button" onclick="copySet1InFocusMode()" class="text-xs font-bold text-orange-400 hover:text-orange-300 bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-lg">
-                        ⚡ Sao chép Hiệp 1 cho tất cả
-                    </button>
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" id="btnVoiceLogNextSet" onclick="startVoiceSetInput()" class="text-xs font-extrabold text-white bg-orange-600 hover:bg-orange-500 px-3 py-1 rounded-lg shadow-sm flex items-center gap-1 transition" title="Đọc giọng nói VD: '60 ký 10 cái' để tự điền kg, reps và tích xong hiệp">
+                            🎙️ Nói kết quả ("60 ký 10 cái")
+                        </button>
+                        <button type="button" onclick="copySet1InFocusMode()" class="text-xs font-bold text-slate-300 hover:text-white bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-lg">
+                            ⚡ Giống S1
+                        </button>
+                    </div>
+                </div>
+                <div id="voiceRecognitionStatusBanner" class="hidden p-2.5 rounded-xl bg-orange-950/80 border border-orange-500 text-orange-200 text-xs font-bold flex items-center justify-between gap-2">
+                    <span id="voiceRecognitionStatusText">🎙️ Đang lắng nghe... Hãy nói kiểu: "60 ký 10 cái"</span>
+                    <button type="button" onclick="stopVoiceSetInput()" class="px-2 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px]">Dừng</button>
                 </div>
                 <div id="focusModeSetsList" class="space-y-3"></div>
             </div>
@@ -4360,14 +4663,9 @@ html.dark .text-indigo-700 {
             const container = document.getElementById('memberTodayDynamicContainer');
             if (!card || !container) return;
 
-            const isMemberView = currentUser && currentUser.role === 'member';
-            if (!isMemberView) {
-                card.classList.add('hidden');
-                return;
-            }
             card.classList.remove('hidden');
 
-            const studentName = document.getElementById('clientName')?.value.trim() || currentUser.displayName || currentUser.username || 'Học viên';
+            const studentName = document.getElementById('clientName')?.value.trim() || currentUser?.displayName || currentUser?.username || 'Học viên';
             const slot = getEffectiveMemberTimeSlot();
             const hourNow = new Date().getHours();
 
@@ -4526,10 +4824,26 @@ html.dark .text-indigo-700 {
                 </div>
             ` : '';
 
+            const activityRingsHtml = (typeof buildActivityRingsWidgetHtml === 'function')
+                ? buildActivityRingsWidgetHtml({
+                    mealsDone: (typeof getTodayCheckedMeals === 'function' ? getTodayCheckedMeals().length : 0),
+                    mealsTotal: Math.max(1, parseInt(document.getElementById('mealsCount')?.value) || 4),
+                    targetCal: targetCal,
+                    proG: proG,
+                    waterCups: waterCupsConsumed,
+                    totalCups: totalCups,
+                    consumedLiters: consumedLiters,
+                    waterMin: waterMin,
+                    doneSets: doneSetsToday,
+                    totalSets: totalSetsToday,
+                    dayLabel: wkMeta.dayLabel
+                })
+                : '';
+
             if (slot === 'evening') {
-                container.innerHTML = coachPinnedBoxHtml + workoutBoxHtml + mealBoxHtml;
+                container.innerHTML = activityRingsHtml + coachPinnedBoxHtml + workoutBoxHtml + mealBoxHtml;
             } else {
-                container.innerHTML = coachPinnedBoxHtml + mealBoxHtml + workoutBoxHtml;
+                container.innerHTML = activityRingsHtml + coachPinnedBoxHtml + mealBoxHtml + workoutBoxHtml;
             }
         }
 
@@ -5280,7 +5594,9 @@ html.dark .text-indigo-700 {
         function generateAnatomySVG(svgType) {
             const hi = "#ea580c";
             const sub = "#f59e0b";
-            const base = "#cbd5e1";
+            const isDark = document.documentElement.classList.contains('dark');
+            const base = isDark ? "#334155" : "#cbd5e1";
+            const bgSvgClass = isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-200";
 
             const isChest = svgType.startsWith('chest');
             const isBack = svgType.startsWith('back');
@@ -5293,7 +5609,7 @@ html.dark .text-indigo-700 {
             const isCore = svgType === 'core_abs';
 
             return `
-            <svg viewBox="0 0 120 140" class="w-16 h-20 mx-auto bg-orange-50/60 rounded-xl p-1 border border-orange-200">
+            <svg viewBox="0 0 120 140" class="w-16 h-20 mx-auto ${bgSvgClass} rounded-xl p-1 border">
                 <circle cx="60" cy="16" r="9" fill="#94a3b8"/>
                 <ellipse cx="36" cy="34" rx="8" ry="6" fill="${isShoulders ? hi : (isChest || isBack ? sub : base)}"/>
                 <ellipse cx="84" cy="34" rx="8" ry="6" fill="${isShoulders ? hi : (isChest || isBack ? sub : base)}"/>
@@ -5903,7 +6219,11 @@ html.dark .text-indigo-700 {
                     if (typeof updateWeeklyAdherenceScore === 'function') updateWeeklyAdherenceScore(false);
                 }
                 showToastNotification(`💧 Tuyệt vời! Bạn đã uống đủ ${targetLiters.toFixed(1)} Lít nước hôm nay!`, '🥤');
+                if (typeof triggerMicroCelebration === 'function') {
+                    triggerMicroCelebration('💧 Hoàn thành 100% Mục tiêu Nước!', `Tuyệt vời quá {name} ơi! Cơ bắp đã được cấp đủ ${targetLiters.toFixed(1)} Lít nước hôm nay!`);
+                }
             }
+            if (typeof renderMemberTodayActionCard === 'function') renderMemberTodayActionCard();
             saveWorkingDraftToLocal();
         }
 
@@ -6845,6 +7165,7 @@ html.dark .text-indigo-700 {
                             ${householdSummaryLine}
                         </div>
                         ` : ''}
+                        ${typeof buildFamilyMealCardInstructionHtml === 'function' ? buildFamilyMealCardInstructionHtml(idx, mPro, mCarb, mFat, totalMeatRaw, mc) : ''}
                         <ul class="space-y-1 text-slate-700 text-xs leading-relaxed">
                             ${items.map(it => `<li>${it}</li>`).join('')}
                         </ul>
@@ -7175,6 +7496,10 @@ html.dark .text-indigo-700 {
                 coachReviewNote: document.getElementById('coachReviewNoteInput')?.value || '',
                 isTravelWorkoutMode: typeof isTravelWorkoutMode !== 'undefined' ? !!isTravelWorkoutMode : false,
                 workoutSplitMode: typeof workoutSplitMode !== 'undefined' ? workoutSplitMode : 'calendar',
+                isFemaleLutealPhaseActive: typeof isFemaleLutealPhaseActive !== 'undefined' ? !!isFemaleLutealPhaseActive : false,
+                isFamilyMealPrepMode: typeof isFamilyMealPrepMode !== 'undefined' ? !!isFamilyMealPrepMode : false,
+                familyMemberCount: parseInt(document.getElementById('familyMemberCountSelect')?.value) || 4,
+                dailyBioReadiness: typeof dailyBioReadiness !== 'undefined' ? { ...dailyBioReadiness } : { doms: 'good', sleep: 'good', energy: 'good', autoRegApplied: false },
                 socialMealTargetSlot: document.getElementById('socialMealTargetSlot')?.value || 'dinner',
                 todayCheckedMeals: typeof getTodayCheckedMeals === 'function' ? getTodayCheckedMeals() : [],
                 disciplineStreakLog: typeof getStudentStreakLog === 'function' ? getStudentStreakLog() : [],
@@ -7267,6 +7592,7 @@ html.dark .text-indigo-700 {
             if (typeof applyTravelWorkoutModeUI === 'function') applyTravelWorkoutModeUI();
             workoutSplitMode = p.workoutSplitMode || 'calendar';
             if (typeof applyWorkoutSplitModeUI === 'function') applyWorkoutSplitModeUI();
+            if (typeof applyHumanCentricProfileState === 'function') applyHumanCentricProfileState(p);
             if (p.socialMealTargetSlot && document.getElementById('socialMealTargetSlot')) {
                 document.getElementById('socialMealTargetSlot').value = p.socialMealTargetSlot;
             }
@@ -7494,8 +7820,11 @@ html.dark .text-indigo-700 {
                 const goalVal = parseFloat(document.getElementById('goal')?.value) || 0;
 
                 if (trendBox) {
+                    const isLuteal = typeof isFemaleLutealPhaseActive !== 'undefined' && isFemaleLutealPhaseActive;
                     let advice = '';
-                    if (goalVal < 0) {
+                    if (isLuteal) {
+                        advice = `🌸 <strong>Đang trong Chu kỳ Sinh lý Nữ / Tuần tiền kinh nguyệt (Luteal Phase):</strong> Trung bình trượt hiện tại là <strong>${maLast} kg</strong> (Biến động ${maDiff > 0 ? '+' : ''}${maDiff}kg). Dao động tăng 1–2kg giai đoạn này là <strong>tích nước nội tiết tự nhiên</strong>, hoàn toàn KHÔNG phải tăng mỡ hay chững cân! Hãy giữ tâm lý thoải mái, ăn thêm thực phẩm giàu Sắt/Magie và tập mức tạ kiểm soát RPE 7–7.5.`;
+                    } else if (goalVal < 0) {
                         if (maDiff < -0.1) {
                             advice = `✅ <strong>Đang giảm mỡ đúng hướng:</strong> Đường trung bình trượt giảm <strong>${maDiff} kg</strong> (từ ${maFirst}kg xuống ${maLast}kg). Hãy giữ nguyên mức Calo và lượng Đạm hiện tại!`;
                         } else if (Math.abs(maDiff) <= 0.1) {
@@ -7520,7 +7849,7 @@ html.dark .text-indigo-700 {
                     const curAdj = typeof plateauCalorieAdjustment !== 'undefined' ? (parseInt(plateauCalorieAdjustment) || 0) : 0;
 
                     let plateauActionHtml = '';
-                    if (Math.abs(maDiff) <= 0.1) {
+                    if (Math.abs(maDiff) <= 0.1 && !(typeof isFemaleLutealPhaseActive !== 'undefined' && isFemaleLutealPhaseActive)) {
                         if (adherenceScore >= 75) {
                             plateauActionHtml = `
                                 <div class="mt-2.5 pt-2 border-t border-indigo-200/80 flex flex-wrap items-center gap-2 no-print">
@@ -7596,6 +7925,15 @@ html.dark .text-indigo-700 {
                 Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
             }
 
+            const isDark = document.documentElement.classList.contains('dark');
+            const legendTextColor = isDark ? '#f8fafc' : '#0f172a';
+            const axisTickColor = isDark ? '#cbd5e1' : '#475569';
+            const gridLineColor = isDark ? 'rgba(51, 65, 85, 0.55)' : 'rgba(226, 232, 240, 0.85)';
+            const dailyBorderColor = isDark ? '#f97316' : '#ea580c';
+            const dailyBgFill = isDark ? 'rgba(249, 115, 22, 0.18)' : 'rgba(234, 88, 12, 0.12)';
+            const trendBorderColor = isDark ? '#38bdf8' : '#0ea5e9';
+            const targetBorderColor = isDark ? '#34d399' : '#10b981';
+
             weightChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -7604,8 +7942,9 @@ html.dark .text-indigo-700 {
                         {
                             label: 'Cân hàng ngày (kg)',
                             data: data,
-                            borderColor: '#ea580c',
-                            backgroundColor: 'rgba(234, 88, 12, 0.12)',
+                            borderColor: dailyBorderColor,
+                            backgroundColor: dailyBgFill,
+                            pointBackgroundColor: dailyBorderColor,
                             borderWidth: 2,
                             pointRadius: 3.5,
                             fill: true,
@@ -7614,7 +7953,8 @@ html.dark .text-indigo-700 {
                         {
                             label: 'Xu hướng Trung bình trượt (Trend)',
                             data: maData,
-                            borderColor: '#4f46e5',
+                            borderColor: trendBorderColor,
+                            pointBackgroundColor: trendBorderColor,
                             borderWidth: 2.5,
                             pointRadius: 2,
                             fill: false,
@@ -7623,7 +7963,7 @@ html.dark .text-indigo-700 {
                         {
                             label: 'Mục tiêu (kg)',
                             data: targetLine,
-                            borderColor: '#10b981',
+                            borderColor: targetBorderColor,
                             borderDash: [5, 5],
                             borderWidth: 1.5,
                             pointRadius: 0,
@@ -7633,10 +7973,23 @@ html.dark .text-indigo-700 {
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { labels: { color: '#334155', font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } } } },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: legendTextColor,
+                                font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: '700' }
+                            }
+                        }
+                    },
                     scales: {
-                        x: { ticks: { color: '#64748b', font: { family: "'Plus Jakarta Sans', sans-serif", size: 10 } } },
-                        y: { ticks: { color: '#64748b', font: { family: "'Plus Jakarta Sans', sans-serif", size: 10 } } }
+                        x: {
+                            grid: { color: gridLineColor },
+                            ticks: { color: axisTickColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 10, weight: '600' } }
+                        },
+                        y: {
+                            grid: { color: gridLineColor },
+                            ticks: { color: axisTickColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 10, weight: '600' } }
+                        }
                     }
                 }
             });
@@ -8108,6 +8461,9 @@ html.dark .text-indigo-700 {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('macro_dark_mode_v11', isDark ? 'enabled' : 'disabled');
             applyDarkModeUI(isDark);
+            if (typeof renderCurrentDayWorkout === 'function' && Object.keys(weeklyWorkoutPlan || {}).length > 0) renderCurrentDayWorkout();
+            if (typeof renderExerciseLibrary === 'function') renderExerciseLibrary();
+            if (typeof renderMemberTodayActionCard === 'function') renderMemberTodayActionCard();
             showToastNotification(isDark ? 'Đã bật chế độ Tối (Dark Mode) dịu mắt phòng gym!' : 'Đã chuyển về chế độ Sáng (Light Mode)!', isDark ? '🌙' : '☀️');
         }
 
@@ -8127,56 +8483,15 @@ html.dark .text-indigo-700 {
             const btnText = document.getElementById('darkModeBtnText');
             if (btnText) btnText.innerText = isDark ? 'Light Mode' : 'Dark Mode';
 
-            const cards = document.querySelectorAll('.bg-white, .bg-slate-900');
-            cards.forEach(card => {
-                if (
-                    card.closest('#fitnessGraphicCardCanvasArea') || 
-                    card.id === 'gymRestTimerWidget' || 
-                    card.id === 'pwaInstallBanner' ||
-                    card.id === 'appToastNotification' ||
-                    card.closest('#appToastNotification') ||
-                    card.id === 'termGlossaryPopover' ||
-                    card.closest('#termGlossaryPopover') ||
-                    card.id === 'gymFocusModeOverlay' ||
-                    card.closest('#gymFocusModeOverlay') ||
-                    card.id === 'exerciseDemoModal' ||
-                    card.closest('#exerciseDemoModal') ||
-                    card.id === 'plateWarmupModal' ||
-                    card.closest('#plateWarmupModal') ||
-                    card.id === 'customConfirmModal' || card.id === 'studentIntakeModal' || card.closest('#studentIntakeModal') ||
-                    card.closest('#customConfirmModal') ||
-                    card.classList.contains('gym-preserve-theme') ||
-                    card.classList.contains('gym-toast-notification') ||
-                    card.classList.contains('gym-term-popover')
-                ) return;
-                if (isDark) {
-                    card.classList.remove('bg-white');
-                    card.classList.add('bg-slate-900', 'text-slate-100', 'border-slate-800');
-                } else {
-                    card.classList.remove('bg-slate-900', 'text-slate-100', 'border-slate-800');
-                    card.classList.add('bg-white');
-                }
-            });
-
-            const inputs = document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), select, textarea');
-            inputs.forEach(inp => {
-                if (isDark) {
-                    if (!inp.classList.contains('bg-slate-950')) {
-                        inp.classList.add('bg-slate-950', 'text-slate-100', 'border-slate-700');
-                        inp.classList.remove('bg-slate-50', 'bg-orange-50', 'bg-white');
-                    }
-                } else {
-                    inp.classList.remove('bg-slate-950', 'text-slate-100', 'border-slate-700');
-                }
-            });
-
             if (isDark) {
                 document.body.style.backgroundColor = '#090d16';
-                document.body.style.color = '#f1f5f9';
+                document.body.style.color = '#f8fafc';
             } else {
                 document.body.style.backgroundColor = '#f8fafc';
-                document.body.style.color = '#1e293b';
+                document.body.style.color = '#0f172a';
             }
+
+            if (typeof renderWeightChart === 'function') renderWeightChart();
         }
 
         // =========================================================================
@@ -9417,6 +9732,7 @@ html.dark .text-indigo-700 {
 
             if (isChecked) {
                 startRestTimer(ex.rest || 60, `${ex.name} (Hiệp ${setIdx + 1}/${logs.length})`);
+                if (typeof checkAndCelebrateLastWorkoutSet === 'function') checkAndCelebrateLastWorkoutSet();
             }
         }
 
@@ -10015,6 +10331,7 @@ html.dark .text-indigo-700 {
                         <button type="button" onclick="openGymFocusMode(${idx})" class="px-2 py-0.5 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-extrabold rounded-md shadow-sm transition no-print" title="Mở chế độ phóng to bài tập này kèm đồng hồ nghỉ & nút +/- số kg to rõ">🔥 Tập bài này</button>
                         <button type="button" onclick="openExerciseDemoModal('${safeExKey}')" class="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[10px] font-bold rounded-md transition no-print">🎥 Mẫu tập</button>
                         <button type="button" onclick="openPlateWarmupModalFromEx(${idx})" class="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[10px] font-bold rounded-md transition no-print" title="Tính bánh tạ lắp mỗi bên & Hiệp khởi động">💿 Lắp tạ</button>
+                        <button type="button" onclick="openFormCheckModalFromEx(${idx})" class="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[10px] font-bold rounded-md transition no-print" title="Quay video hoặc gửi nhanh tin nhắn Check Form bài tập này cho PT">📹 Check Form</button>
                         ${canEditWorkout ? `<button type="button" onclick="quickSwapSameMuscleExercise(${idx})" class="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[10px] font-bold rounded-md transition no-print" title="Máy đang bận? Đổi nhanh sang bài khác cùng nhóm cơ">🔀 Đổi bài (Máy bận)</button>` : ''}
                         ${canEditWorkout ? `<button type="button" onclick="cycleExerciseTechniqueTag(${idx})" class="px-2 py-0.5 ${techTag ? 'bg-slate-700 text-white border-slate-700' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'} border text-[10px] font-bold rounded-md transition no-print" title="Gắn nhãn Superset / Drop Set / Rest-Pause">${techTag || '🔗 Ghép Superset/Drop'}</button>` : (techTag ? `<span class="px-2 py-0.5 bg-slate-700 text-white text-[10px] font-bold rounded-md">${techTag}</span>` : '')}
                         ${swapBtnHtml}
@@ -10733,6 +11050,9 @@ html.dark .text-indigo-700 {
             renderGymFocusModeUI();
             saveWorkingDraftToLocal();
             showToastNotification(`🏆 Đã cập nhật kỷ lục 1RM mới cho ${liftLabel}: ${rounded} kg!`, '🏆');
+            if (typeof triggerMicroCelebration === 'function') {
+                triggerMicroCelebration(`🏆 Kỷ lục 1RM Mới: ${liftLabel} ${rounded}kg!`, `Quá đỉnh {name} ơi! Bạn vừa chính thức phá kỷ lục sức mạnh cá nhân!`);
+            }
         }
 
         function openGymFocusMode(startExIdx = 0) {
@@ -10958,9 +11278,17 @@ html.dark .text-indigo-700 {
                                         ${isSetNewRecord ? `<button type="button" onclick="applyNewEstimated1RM('${big3Target.inputId}', ${setE1RM}, '${big3Target.label}')" class="px-2.5 py-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-[11px] rounded-lg shadow-md transition active:scale-95">🏆 Cập nhật 1RM mới (${setE1RM}kg)</button>` : ''}
                                     </span>
                                 </div>
-                                <button type="button" onclick="toggleFocusSetDone(${sIdx})" class="px-4 py-2 rounded-xl font-black text-xs sm:text-sm transition active:scale-95 shadow-md ${isDone ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950' : 'bg-orange-600 hover:bg-orange-500 text-white'}">
-                                    ${isDone ? '✅ Đã xong hiệp (Bấm để hủy)' : '⬜ Hoàn thành Hiệp ' + (sIdx + 1)}
-                                </button>
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" onclick="startVoiceSetInput(${sIdx})" class="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-orange-300 border border-slate-700 font-bold text-xs transition active:scale-95" title="Nhập hiệp ${sIdx + 1} bằng giọng nói (VD: '60 ký 10 cái')">
+                                        🎙️
+                                    </button>
+                                    <button type="button" onclick="openFormCheckModalFromEx(currentFocusExIndex, ${sIdx})" class="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 font-bold text-xs transition active:scale-95" title="Gửi Video Check Form hiệp ${sIdx + 1} cho PT">
+                                        📹
+                                    </button>
+                                    <button type="button" onclick="toggleFocusSetDone(${sIdx})" class="px-4 py-2 rounded-xl font-black text-xs sm:text-sm transition active:scale-95 shadow-md ${isDone ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950' : 'bg-orange-600 hover:bg-orange-500 text-white'}">
+                                        ${isDone ? '✅ Đã xong hiệp (Bấm để hủy)' : '⬜ Hoàn thành Hiệp ' + (sIdx + 1)}
+                                    </button>
+                                </div>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 <!-- Chỉnh số KG tạ to rõ -->
@@ -11079,6 +11407,7 @@ html.dark .text-indigo-700 {
 
             if (logs[setIdx].done) {
                 startRestTimer(ex.rest || 60, `${ex.name} (Hiệp ${setIdx + 1}/${logs.length})`);
+                if (typeof checkAndCelebrateLastWorkoutSet === 'function') checkAndCelebrateLastWorkoutSet();
             }
         }
 
@@ -12966,7 +13295,612 @@ html.dark .text-indigo-700 {
         }, 700);
     });
     </script>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL QUAY & GỬI VIDEO CHECK FORM CHO PT QUA ZALO (1-TAP FORM CHECK)       -->
+    <!-- ========================================================================= -->
+    <div id="formCheckVideoModal" class="hidden fixed inset-0 z-[75] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 no-print" onclick="if(event.target === this) closeFormCheckModal()">
+        <div class="bg-[#090d16] text-slate-100 rounded-3xl shadow-2xl border border-slate-800 max-w-lg w-full p-5 space-y-4">
+            <div class="flex justify-between items-start border-b border-slate-800 pb-3">
+                <div>
+                    <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">📹 1-Tap Form Check • Sửa Kỹ Thuật Từ Xa</span>
+                    <h3 id="formCheckModalExTitle" class="text-base font-extrabold text-white mt-1">Gửi Video Check Form Cho PT</h3>
+                    <p class="text-xs text-slate-400">Quay trực tiếp hoặc chọn clip trong máy để gửi Coach kiểm tra góc lưng, gối &amp; quỹ đạo đòn</p>
+                </div>
+                <button type="button" onclick="closeFormCheckModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-700 font-bold">✕</button>
+            </div>
+
+            <!-- Bước 1: Mở Camera quay hoặc chọn video -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 space-y-2.5 text-xs">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-200">🎥 Bước 1: Quay clip hiệp tập (Góc nghiêng 45°):</span>
+                    <label class="px-3 py-1.5 bg-orange-600 hover:bg-orange-500 text-white font-extrabold rounded-xl cursor-pointer transition shadow-sm inline-flex items-center gap-1">
+                        <span>📷 Mở Camera / Chọn Clip</span>
+                        <input type="file" id="formCheckVideoFileInput" accept="video/*" capture="environment" onchange="onFormCheckVideoSelected(event)" class="hidden">
+                    </label>
+                </div>
+                <video id="formCheckVideoPreview" controls class="hidden w-full max-h-48 rounded-xl bg-black border border-slate-700"></video>
+                <div id="formCheckVideoHint" class="text-[11px] text-slate-400 italic">💡 Mẹo: Đặt điện thoại ngang tầm hông, góc chếch 45 độ để Coach nhìn rõ cả khớp vai, lưng dưới và đầu gối.</div>
+            </div>
+
+            <!-- Bước 2: Nhãn tin nhắn tự động kèm Bài tập - Hiệp - Mức tạ -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 space-y-2 text-xs">
+                <label class="block font-bold text-emerald-400">💬 Nhãn tự động gửi kèm Video cho PT:</label>
+                <textarea id="formCheckAutoMessageText" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-bold text-white outline-none"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <button type="button" onclick="copyAndSendFormCheckZalo()" class="py-2.5 px-4 bg-orange-600 hover:bg-orange-500 text-white font-extrabold rounded-xl shadow text-xs flex items-center justify-center gap-1.5 transition">
+                    <span>📋 Copy Nhãn &amp; Mở Zalo Gửi PT</span>
+                </button>
+                <button type="button" onclick="shareFormCheckNative()" class="py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                    <span>📲 Chia sẻ nhanh Clip (Share Sheet)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- LỚP PHỦ PHÁO GIẤY ĂN MỪNG VI MÔ (MICRO-CELEBRATIONS CONFETTI 1.5 GIÂY)     -->
+    <!-- ========================================================================= -->
+    <canvas id="microCelebrationConfettiCanvas" class="hidden fixed inset-0 z-[95] pointer-events-none"></canvas>
+    <div id="microCelebrationBanner" class="hidden fixed top-6 left-1/2 -translate-x-1/2 z-[96] pointer-events-none bg-[#090d16]/95 text-white border-2 border-amber-400 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-md w-[92vw] transition-all duration-300">
+        <span class="text-2xl">🎉</span>
+        <div>
+            <div id="microCelebrationTitle" class="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wide">Tuyệt vời!</div>
+            <div id="microCelebrationSubtitle" class="text-xs text-slate-200 font-semibold mt-0.5"></div>
+        </div>
+    </div>
+
+    <script>
+    // =========================================================================
+    // ENGINE HUMAN-CENTRIC UX & NEXT-GEN COACHING FEATURES
+    // =========================================================================
+    let isFemaleLutealPhaseActive = false;
+    let isFamilyMealPrepMode = false;
+    let dailyBioReadiness = {
+        doms: 'good',   // 'good' | 'mid' | 'low'
+        sleep: 'good',  // 'good' | 'mid' | 'low'
+        energy: 'good', // 'good' | 'mid' | 'low'
+        autoRegApplied: false
+    };
+    let activeVoiceRecogInstance = null;
+    let selectedFormCheckVideoFile = null;
+
+    // 1. VÒNG TRÒN TIẾN ĐỘ (APPLE FITNESS ACTIVITY RINGS) Ở ĐẦU TRANG
+    function buildActivityRingsWidgetHtml(stats) {
+        const mealPct = Math.min(100, Math.round((stats.mealsDone / Math.max(1, stats.mealsTotal)) * 100));
+        const waterPct = Math.min(100, Math.round((stats.waterCups / Math.max(1, stats.totalCups)) * 100));
+        const workoutPct = stats.totalSets > 0 ? Math.min(100, Math.round((stats.doneSets / stats.totalSets) * 100)) : 100;
+
+        // Đồng tâm 3 vòng SVG: Outer (r=44, C=276.46), Middle (r=33, C=207.35), Inner (r=22, C=138.23)
+        const c1 = 276.46, o1 = +(c1 * (1 - mealPct / 100)).toFixed(1);
+        const c2 = 207.35, o2 = +(c2 * (1 - waterPct / 100)).toFixed(1);
+        const c3 = 138.23, o3 = +(c3 * (1 - workoutPct / 100)).toFixed(1);
+
+        const allClosed = mealPct >= 100 && waterPct >= 100 && workoutPct >= 100;
+        const isDark = document.documentElement.classList.contains('dark');
+        const trackMeal = isDark ? 'rgba(234, 88, 12, 0.22)' : '#ffedd5';
+        const trackWater = isDark ? 'rgba(14, 165, 233, 0.22)' : '#e0f2fe';
+        const trackWorkout = isDark ? 'rgba(16, 185, 129, 0.22)' : '#d1fae5';
+
+        return `
+            <div id="appleActivityRingsBanner" class="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <!-- 3 Vòng Tròn Đồng Tâm (Concentric Activity Rings) -->
+                    <div class="relative w-28 h-28 flex-shrink-0 flex items-center justify-center">
+                        <svg class="w-28 h-28 -rotate-90" viewBox="0 0 108 108">
+                            <!-- Background Tracks -->
+                            <circle cx="54" cy="54" r="44" fill="none" stroke="${trackMeal}" stroke-width="8" />
+                            <circle cx="54" cy="54" r="33" fill="none" stroke="${trackWater}" stroke-width="8" />
+                            <circle cx="54" cy="54" r="22" fill="none" stroke="${trackWorkout}" stroke-width="8" />
+                            <!-- Progress Rings: Cam (Đạm/Calo) • Xanh dương (Nước) • Xanh lá (Hiệp tập) -->
+                            <circle cx="54" cy="54" r="44" fill="none" stroke="#ea580c" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c1}" stroke-dashoffset="${o1}" />
+                            <circle cx="54" cy="54" r="33" fill="none" stroke="#0ea5e9" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c2}" stroke-dashoffset="${o2}" />
+                            <circle cx="54" cy="54" r="22" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c3}" stroke-dashoffset="${o3}" />
+                        </svg>
+                        <div class="ring-center-label absolute inset-0 flex flex-col items-center justify-center text-center">
+                            <span class="ring-center-label text-xs font-black text-slate-800">${Math.round((mealPct + waterPct + workoutPct) / 3)}%</span>
+                            <span class="ring-center-label text-[9px] font-bold text-slate-400 uppercase">Hôm nay</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5 flex-1">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${allClosed ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'}">
+                                ${allClosed ? '🏆 Đã khép kín cả 3 vòng hôm nay!' : '🎯 Vòng Tròn Tiến Độ Ngày (Activity Rings)'}
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs">
+                            <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="flex items-center justify-between font-extrabold text-orange-600">
+                                    <span>🟠 Đạm &amp; Bữa ăn</span>
+                                    <span>${mealPct}%</span>
+                                </div>
+                                <div class="text-[11px] text-slate-600 font-semibold mt-0.5">${stats.mealsDone}/${stats.mealsTotal} bữa (${stats.proG}g P)</div>
+                            </div>
+                            <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="flex items-center justify-between font-extrabold text-sky-500">
+                                    <span>🔵 Nước uống</span>
+                                    <span>${waterPct}%</span>
+                                </div>
+                                <div class="text-[11px] text-slate-600 font-semibold mt-0.5">${stats.consumedLiters}/${stats.waterMin.toFixed(1)}L (${stats.waterCups}/${stats.totalCups} cốc)</div>
+                            </div>
+                            <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="flex items-center justify-between font-extrabold text-emerald-600">
+                                    <span>🟢 Hiệp tập</span>
+                                    <span>${workoutPct}%</span>
+                                </div>
+                                <div class="text-[11px] text-slate-600 font-semibold mt-0.5">${stats.doneSets}/${stats.totalSets} hiệp (${stats.dayLabel})</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // 2. NÚT CHỌN NHANH (QUICK CHIPS) CHO CÂN NẶNG (#logWeight) & VÒNG EO (#measWaistInput)
+    function getLatestBaseWeight() {
+        const curInput = parseFloat(document.getElementById('logWeight')?.value);
+        if (Number.isFinite(curInput) && curInput > 0) return curInput;
+        if (Array.isArray(currentWeightLogs) && currentWeightLogs.length > 0) {
+            return parseFloat(currentWeightLogs[currentWeightLogs.length - 1].weight) || 70;
+        }
+        return parseFloat(document.getElementById('weight')?.value) || 70;
+    }
+
+    function updateQuickWeightBaseLabel() {
+        const lbl = document.getElementById('quickWeightBaseLabel');
+        if (!lbl) return;
+        const baseW = (Array.isArray(currentWeightLogs) && currentWeightLogs.length > 0)
+            ? parseFloat(currentWeightLogs[currentWeightLogs.length - 1].weight)
+            : (parseFloat(document.getElementById('weight')?.value) || 70);
+        lbl.innerText = `${baseW.toFixed(1)}kg`;
+    }
+
+    function adjustQuickWeightChip(delta) {
+        const inp = document.getElementById('logWeight');
+        if (!inp) return;
+        const base = getLatestBaseWeight();
+        const nextVal = Math.max(25, +(base + delta).toFixed(1));
+        inp.value = nextVal.toFixed(1);
+        updateQuickWeightBaseLabel();
+        showToastNotification(`Đã chọn nhanh cân nặng: ${nextVal.toFixed(1)} kg (Bấm "+ Ghi nhận kg" để lưu)`, '⚖️');
+    }
+
+    function adjustQuickWaistChip(delta) {
+        const inp = document.getElementById('measWaistInput');
+        if (!inp) return;
+        let base = parseFloat(inp.value);
+        if (!Number.isFinite(base) || base <= 0) {
+            if (typeof bodyMeasurementLogs !== 'undefined' && Array.isArray(bodyMeasurementLogs) && bodyMeasurementLogs.length > 0) {
+                base = parseFloat(bodyMeasurementLogs[bodyMeasurementLogs.length - 1].waist) || 78;
+            } else {
+                base = parseFloat(document.getElementById('navyWaist')?.value) || 78;
+            }
+        }
+        const nextVal = Math.max(45, +(base + delta).toFixed(1));
+        inp.value = nextVal.toFixed(1);
+        showToastNotification(`Đã chọn nhanh vòng eo: ${nextVal.toFixed(1)} cm`, '📏');
+    }
+
+    // 3. NHẬP LIỆU BẰNG GIỌNG NÓI (WEB SPEECH API) TRONG GYM FOCUS MODE
+    function parseAndApplyVoiceSetTranscript(transcriptText, targetSetIdx = null) {
+        const plan = weeklyWorkoutPlan[currentSelectedDay];
+        if (!plan || !plan.items || !plan.items[currentFocusExIndex]) return null;
+        const ex = plan.items[currentFocusExIndex];
+        const logs = ensureExerciseSetLogs(ex);
+
+        // Nếu không truyền targetSetIdx, tự động chọn hiệp đầu tiên chưa hoàn thành
+        let sIdx = targetSetIdx;
+        if (sIdx === null || sIdx === undefined || !logs[sIdx]) {
+            sIdx = logs.findIndex(s => !s.done);
+            if (sIdx === -1) sIdx = logs.length - 1;
+        }
+        if (!logs[sIdx]) return null;
+
+        const normalized = String(transcriptText || '')
+            .toLowerCase()
+            .replace(/phẩy|chấm/g, '.')
+            .replace(/rưỡi/g, '.5');
+
+        const nums = normalized.match(/\d+(?:\.\d+)?/g);
+        if (!nums || nums.length === 0) {
+            showToastNotification(`Không nhận diện được số từ câu nói: "${transcriptText}"`, '⚠️');
+            return null;
+        }
+
+        const weightVal = parseFloat(nums[0]);
+        const repsVal = nums.length >= 2 ? parseInt(nums[1], 10) : (parseInt(logs[sIdx].reps) || 10);
+
+        logs[sIdx].weight = String(weightVal);
+        logs[sIdx].reps = String(repsVal);
+        logs[sIdx].done = true;
+
+        renderGymFocusModeUI();
+        updateDayTotalVolumeBadgeOnly();
+        saveWorkingDraftToLocal();
+        startRestTimer(ex.rest || 60, `${ex.name} (Hiệp ${sIdx + 1}/${logs.length})`);
+        if (typeof checkAndCelebrateLastWorkoutSet === 'function') checkAndCelebrateLastWorkoutSet();
+
+        showToastNotification(`🎙️ Đã nhập bằng giọng nói Hiệp ${sIdx + 1}: ${weightVal}kg × ${repsVal} cái!`, '✅');
+        return { setIdx: sIdx, weight: weightVal, reps: repsVal };
+    }
+
+    function startVoiceSetInput(targetSetIdx = null) {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const banner = document.getElementById('voiceRecognitionStatusBanner');
+        const textEl = document.getElementById('voiceRecognitionStatusText');
+
+        if (!SpeechRec) {
+            const sample = prompt('Trình duyệt không hỗ trợ trực tiếp Mic hoặc đang tắt quyền Mic. Nhập câu nói mẫu (VD: "60 ký 10 cái"):', '60 ký 10 cái');
+            if (sample) parseAndApplyVoiceSetTranscript(sample, targetSetIdx);
+            return;
+        }
+
+        try {
+            if (activeVoiceRecogInstance) {
+                activeVoiceRecogInstance.stop();
+            }
+            const recog = new SpeechRec();
+            activeVoiceRecogInstance = recog;
+            recog.lang = 'vi-VN';
+            recog.interimResults = false;
+            recog.maxAlternatives = 1;
+
+            if (banner) banner.classList.remove('hidden');
+            if (textEl) textEl.innerText = `🎙️ Đang nghe Hiệp ${targetSetIdx !== null ? targetSetIdx + 1 : 'tiếp theo'}... Hãy nói: "60 ký 10 cái"`;
+
+            recog.onresult = (event) => {
+                const spoken = event.results?.[0]?.[0]?.transcript || '';
+                if (banner) banner.classList.add('hidden');
+                parseAndApplyVoiceSetTranscript(spoken, targetSetIdx);
+            };
+            recog.onerror = () => {
+                if (banner) banner.classList.add('hidden');
+                showToastNotification('Không nghe rõ hoặc chưa cấp quyền Micro!', '⚠️');
+            };
+            recog.onend = () => {
+                if (banner) banner.classList.add('hidden');
+            };
+            recog.start();
+        } catch (err) {
+            if (banner) banner.classList.add('hidden');
+        }
+    }
+
+    function stopVoiceSetInput() {
+        if (activeVoiceRecogInstance) {
+            try { activeVoiceRecogInstance.stop(); } catch (e) {}
+            activeVoiceRecogInstance = null;
+        }
+        document.getElementById('voiceRecognitionStatusBanner')?.classList.add('hidden');
+    }
+
+    // 4. HIỆU ỨNG ĂN MỪNG VI MÔ (MICRO-CELEBRATIONS - CANVAS CONFETTI 1.5 GIÂY)
+    function triggerMicroCelebration(titleText, subtitleTemplate) {
+        const studentName = document.getElementById('clientName')?.value.trim() || 'bạn';
+        const finalSub = String(subtitleTemplate || 'Chúc mừng {name} đã hoàn thành xuất sắc mục tiêu!').replace(/\{name\}/g, studentName);
+
+        const banner = document.getElementById('microCelebrationBanner');
+        const titleEl = document.getElementById('microCelebrationTitle');
+        const subEl = document.getElementById('microCelebrationSubtitle');
+        if (titleEl) titleEl.innerText = titleText || '🎉 Xuất sắc!';
+        if (subEl) subEl.innerText = finalSub;
+        if (banner) banner.classList.remove('hidden');
+
+        const canvas = document.getElementById('microCelebrationConfettiCanvas');
+        if (canvas && canvas.getContext) {
+            canvas.width = window.innerWidth || 800;
+            canvas.height = window.innerHeight || 600;
+            canvas.classList.remove('hidden');
+            const ctx = canvas.getContext('2d');
+            const colors = ['#ea580c', '#10b981', '#0ea5e9', '#f59e0b', '#f43f5e'];
+            const particles = Array.from({ length: 55 }, (_, i) => ({
+                x: (canvas.width * ((i * 17) % 100)) / 100,
+                y: -10 - (i % 40),
+                vx: ((i % 7) - 3) * 1.8,
+                vy: 3.5 + (i % 5) * 1.3,
+                size: 6 + (i % 5),
+                color: colors[i % colors.length]
+            }));
+
+            const startTs = Date.now();
+            function stepConfetti() {
+                const elapsed = Date.now() - startTs;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size * 0.7);
+                });
+                if (elapsed < 1500) {
+                    requestAnimationFrame(stepConfetti);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.classList.add('hidden');
+                }
+            }
+            requestAnimationFrame(stepConfetti);
+        }
+
+        setTimeout(() => {
+            if (banner) banner.classList.add('hidden');
+        }, 2600);
+    }
+
+    function checkAndCelebrateLastWorkoutSet() {
+        const plan = weeklyWorkoutPlan[currentSelectedDay];
+        if (!plan || !Array.isArray(plan.items) || plan.items.length === 0) return;
+        let total = 0, done = 0;
+        plan.items.forEach(ex => {
+            const effSets = getDeloadEffectiveSets(ex.sets);
+            const l = ensureExerciseSetLogs(ex).slice(0, effSets);
+            total += l.length;
+            done += l.filter(s => s.done).length;
+        });
+        if (total > 0 && done === total) {
+            triggerMicroCelebration(
+                '🔥 HOÀN THÀNH 100% BUỔI TẬP HÔM NAY!',
+                'Quá tuyệt vời {name} ơi! Bạn đã chinh phục trọn vẹn tất cả các hiệp tập hôm nay!'
+            );
+        }
+        if (typeof renderMemberTodayActionCard === 'function') renderMemberTodayActionCard();
+    }
+
+    // 5. CHỈ SỐ SẴN SÀNG TẬP LUYỆN ĐẦU NGÀY (DAILY READINESS & AUTO-REGULATION)
+    function setBioReadinessFactor(factor, level) {
+        if (!dailyBioReadiness) dailyBioReadiness = { doms: 'good', sleep: 'good', energy: 'good', autoRegApplied: false };
+        dailyBioReadiness[factor] = level;
+        renderBioReadinessUI();
+        saveWorkingDraftToLocal();
+    }
+
+    function renderBioReadinessUI() {
+        const factors = ['doms', 'sleep', 'energy'];
+        const prefixMap = { doms: 'bioDoms_', sleep: 'bioSleep_', energy: 'bioEnergy_' };
+        factors.forEach(f => {
+            ['good', 'mid', 'low'].forEach(lv => {
+                const btn = document.getElementById(prefixMap[f] + lv);
+                if (!btn) return;
+                const isSel = (dailyBioReadiness[f] || 'good') === lv;
+                if (isSel) {
+                    const activeColor = lv === 'good' ? 'bg-emerald-600 text-white' : (lv === 'mid' ? 'bg-amber-500 text-white' : 'bg-rose-600 text-white');
+                    btn.className = `px-2 py-1 rounded-lg text-[10px] font-extrabold ${activeColor} transition shadow-2xs`;
+                } else {
+                    btn.className = 'px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+                }
+            });
+        });
+
+        const isLowSleepOrEnergy = dailyBioReadiness.sleep === 'low' || dailyBioReadiness.energy === 'low' || dailyBioReadiness.doms === 'low';
+        const badge = document.getElementById('readinessScoreBadge');
+        const banner = document.getElementById('bioReadinessAutoRegBanner');
+        const btnHeader = document.getElementById('btnAutoRegulateSession');
+
+        if (isLowSleepOrEnergy) {
+            if (badge) {
+                badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300';
+                badge.innerText = dailyBioReadiness.autoRegApplied
+                    ? '🛡️ Đã bật Giảm tải 1 buổi (-1 Hiệp & RPE 7)'
+                    : '⚠️ Cơ thể cần giảm tải nhẹ hôm nay (Khuyên RPE 7)';
+            }
+            if (banner) banner.classList.toggle('hidden', !!dailyBioReadiness.autoRegApplied);
+            if (btnHeader) btnHeader.classList.remove('hidden');
+        } else {
+            if (badge) {
+                badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800';
+                badge.innerText = 'Sẵn sàng 100% • Tập chuẩn giáo án';
+            }
+            if (banner) banner.classList.add('hidden');
+            if (btnHeader) btnHeader.classList.add('hidden');
+        }
+    }
+
+    function applyOneClickBioAutoRegulation() {
+        const plan = weeklyWorkoutPlan[currentSelectedDay];
+        if (!plan || !Array.isArray(plan.items) || plan.items.length === 0) {
+            showToastNotification('Chưa có bài tập nào trong buổi hôm nay để giảm tải!', '⚠️');
+            return;
+        }
+        plan.items.forEach(ex => {
+            const curSets = parseInt(ex.sets) || 3;
+            ex.sets = Math.max(1, curSets - 1);
+            ex.note = '🛡️ Auto-Reg: Trần RPE 7 (Giảm 1 hiệp do thiếu ngủ/mỏi cơ)';
+            ensureExerciseSetLogs(ex);
+        });
+        dailyBioReadiness.autoRegApplied = true;
+        renderBioReadinessUI();
+        renderCurrentDayWorkout();
+        renderDaySelector();
+        saveWorkingDraftToLocal();
+
+        if (typeof recordStudentAuditLog === 'function') {
+            const cName = document.getElementById('clientName')?.value.trim() || 'Học viên';
+            recordStudentAuditLog(cName, ['Kích hoạt Auto-Regulation giảm 1 hiệp/bài & lùi trần RPE 7 do thiếu ngủ/mệt mỏi']);
+        }
+        showToastNotification('🛡️ Đã kích hoạt Giảm Tải 1 Buổi: Giảm 1 hiệp mỗi bài & lùi trần RPE xuống 7, đồng thời ghi nhật ký báo cho PT!', '🛡️');
+    }
+
+    function toggleDailyAutoRegulation() {
+        applyOneClickBioAutoRegulation();
+    }
+
+    // 6. THEO DÕI SINH LÝ & CHU KỲ NĂNG LƯỢNG NỮ (LUTEAL PHASE)
+    function toggleFemaleLutealPhase(isChecked) {
+        isFemaleLutealPhaseActive = !!isChecked;
+        const chk = document.getElementById('chkFemaleLutealPhase');
+        if (chk) chk.checked = isFemaleLutealPhaseActive;
+        const banner = document.getElementById('femaleLutealAdviceBanner');
+        if (banner) banner.classList.toggle('hidden', !isFemaleLutealPhaseActive);
+
+        if (typeof renderWeightHistoryList === 'function') renderWeightHistoryList();
+        saveWorkingDraftToLocal();
+        if (isFemaleLutealPhaseActive) {
+            showToastNotification('🌸 Đã bật Chế độ Sinh lý Nữ (Luteal Phase): Tắt cảnh báo chững cân ảo & ưu tiên thực phẩm giàu Sắt/Magie!', '🌸');
+        }
+    }
+
+    // 7. QUAY / GỬI VIDEO CHECK FORM CHO PT (1-TAP FORM CHECK)
+    function openFormCheckModalFromEx(exIdx, setIdx = null) {
+        const plan = weeklyWorkoutPlan[currentSelectedDay];
+        const ex = (plan && plan.items && plan.items[exIdx]) ? plan.items[exIdx] : { name: 'Squat / RDL', reps: '10', sets: 3 };
+        const logs = ensureExerciseSetLogs(ex);
+        const targetSIdx = (setIdx !== null && logs[setIdx]) ? setIdx : Math.max(0, logs.findIndex(s => s.done));
+        const sLog = logs[targetSIdx >= 0 ? targetSIdx : 0] || { weight: 50, reps: 10 };
+        const w = sLog.weight || extractSuggestedWeightFromNote(ex) || 50;
+        const r = sLog.reps || ex.reps || 10;
+        const sNum = (targetSIdx >= 0 ? targetSIdx : 0) + 1;
+
+        const titleEl = document.getElementById('formCheckModalExTitle');
+        const msgEl = document.getElementById('formCheckAutoMessageText');
+        if (titleEl) titleEl.innerText = `📹 Check Form: ${ex.name}`;
+        if (msgEl) {
+            msgEl.value = `Anh Cường ơi check giúp em form bài ${ex.name} - Hiệp ${sNum} - ${w}kgx${r} nhé!`;
+        }
+        document.getElementById('formCheckVideoModal')?.classList.remove('hidden');
+    }
+
+    function closeFormCheckModal() {
+        document.getElementById('formCheckVideoModal')?.classList.add('hidden');
+    }
+
+    function onFormCheckVideoSelected(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        selectedFormCheckVideoFile = file;
+        const videoEl = document.getElementById('formCheckVideoPreview');
+        if (videoEl) {
+            videoEl.src = URL.createObjectURL(file);
+            videoEl.classList.remove('hidden');
+        }
+        showToastNotification('📹 Đã nạp clip tập luyện! Bấm Copy Nhãn hoặc Chia sẻ nhanh cho PT.', '📹');
+    }
+
+    function copyAndSendFormCheckZalo() {
+        const msg = document.getElementById('formCheckAutoMessageText')?.value || '';
+        copyTextSafe(msg, '📋 Đã copy nhãn Check Form! Hãy dán kèm clip vào Zalo của Coach nhé!');
+    }
+
+    async function shareFormCheckNative() {
+        const msg = document.getElementById('formCheckAutoMessageText')?.value || '';
+        if (navigator.share) {
+            try {
+                const shareData = { title: 'Check Form Bài Tập', text: msg };
+                if (selectedFormCheckVideoFile && navigator.canShare && navigator.canShare({ files: [selectedFormCheckVideoFile] })) {
+                    shareData.files = [selectedFormCheckVideoFile];
+                }
+                await navigator.share(shareData);
+                return;
+            } catch (e) {}
+        }
+        copyAndSendFormCheckZalo();
+    }
+
+    // 8. CHẾ ĐỘ "NẤU ĂN CHO CẢ GIA ĐÌNH" (FAMILY MEAL PREP MULTIPLIER)
+    function toggleFamilyMealPrepMode() {
+        isFamilyMealPrepMode = !isFamilyMealPrepMode;
+        renderFamilyMealPrepUI();
+        calculateAll();
+        saveWorkingDraftToLocal();
+        showToastNotification(
+            isFamilyMealPrepMode
+                ? '🍱 Đã bật Chế độ Nồi Ăn Chung Gia Đình: Không cần nấu 2 nồi riêng, chỉ cần gắp đúng số miếng/lạng chín ra bát của bạn!'
+                : 'Đã chuyển về hiển thị khẩu phần cá nhân tiêu chuẩn.',
+            '🍱'
+        );
+    }
+
+    function onFamilyMealConfigChange() {
+        if (!isFamilyMealPrepMode) isFamilyMealPrepMode = true;
+        renderFamilyMealPrepUI();
+        calculateAll();
+        saveWorkingDraftToLocal();
+    }
+
+    function renderFamilyMealPrepUI() {
+        const badge = document.getElementById('familyMealStatusBadge');
+        const btn = document.getElementById('btnToggleFamilyMealMode');
+        const count = parseInt(document.getElementById('familyMemberCountSelect')?.value) || 4;
+        if (badge) {
+            badge.className = isFamilyMealPrepMode
+                ? 'text-[10px] px-2 py-0.5 rounded-full bg-orange-600 text-white font-extrabold'
+                : 'text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-bold';
+            badge.innerText = isFamilyMealPrepMode
+                ? `Đang bật: Nồi chung ${count} người`
+                : 'Đang tắt (Khẩu phần cá nhân)';
+        }
+        if (btn) {
+            btn.className = isFamilyMealPrepMode
+                ? 'px-3 py-1.5 rounded-xl font-extrabold text-xs border border-orange-600 bg-orange-600 text-white transition shadow-2xs'
+                : 'px-3 py-1.5 rounded-xl font-extrabold text-xs border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 transition shadow-2xs';
+            btn.innerText = isFamilyMealPrepMode ? '✓ Đang bật Nồi Gia Đình' : '🍱 Bật Nồi Gia Đình';
+        }
+    }
+
+    function buildFamilyMealCardInstructionHtml(mealIdx, mPro, mCarb, mFat, totalMeatRaw, mc) {
+        if (!isFamilyMealPrepMode) return '';
+        const famCount = Math.max(2, parseInt(document.getElementById('familyMemberCountSelect')?.value) || 4);
+        const myMeatRaw = Math.max(80, Math.round((totalMeatRaw * (mc.pShare || 0.25)) / 5) * 5);
+        const myMeatCooked = Math.round(myMeatRaw * 0.74);
+        const familyPotRaw = Math.round((myMeatRaw * famCount) / 50) * 50;
+        const piecesCount = Math.max(2, Math.round(myMeatCooked / 25));
+        const riceBowls = +((mCarb / 42)).toFixed(1);
+
+        return `
+            <div class="p-2.5 rounded-xl bg-white border border-slate-300 text-[11px] text-slate-700 space-y-1 shadow-2xs">
+                <div class="font-extrabold text-slate-800 flex items-center justify-between">
+                    <span>🍱 Nồi ăn chung gia đình (${famCount} người):</span>
+                    <span class="text-[10px] text-orange-600 font-bold">Không cần nấu riêng</span>
+                </div>
+                <div>• <strong>Cả nhà nấu chung:</strong> ~<strong>${familyPotRaw}g thịt/cá sống</strong> (luộc/hấp/rang nhạt trước khi rim mặn).</div>
+                <div class="text-emerald-800 bg-emerald-50/80 border border-emerald-200 px-2 py-1 rounded-lg font-semibold">
+                    👉 <strong>Gắp ra bát riêng của bạn:</strong> <strong>${piecesCount} miếng vừa ăn (~${myMeatCooked}g chín / ${(myMeatCooked/100).toFixed(1)} lạng chín)</strong> + <strong>${riceBowls} lưng bát cơm</strong> + 1 đĩa rau luộc.
+                </div>
+            </div>
+        `;
+    }
+
+    function applyHumanCentricProfileState(p) {
+        isFemaleLutealPhaseActive = !!p.isFemaleLutealPhaseActive;
+        const chkLuteal = document.getElementById('chkFemaleLutealPhase');
+        if (chkLuteal) chkLuteal.checked = isFemaleLutealPhaseActive;
+        const lutealBanner = document.getElementById('femaleLutealAdviceBanner');
+        if (lutealBanner) lutealBanner.classList.toggle('hidden', !isFemaleLutealPhaseActive);
+
+        isFamilyMealPrepMode = !!p.isFamilyMealPrepMode;
+        if (p.familyMemberCount && document.getElementById('familyMemberCountSelect')) {
+            document.getElementById('familyMemberCountSelect').value = String(p.familyMemberCount);
+        }
+        renderFamilyMealPrepUI();
+
+        if (p.dailyBioReadiness && typeof p.dailyBioReadiness === 'object') {
+            dailyBioReadiness = {
+                doms: p.dailyBioReadiness.doms || 'good',
+                sleep: p.dailyBioReadiness.sleep || 'good',
+                energy: p.dailyBioReadiness.energy || 'good',
+                autoRegApplied: !!p.dailyBioReadiness.autoRegApplied
+            };
+        } else {
+            dailyBioReadiness = { doms: 'good', sleep: 'good', energy: 'good', autoRegApplied: false };
+        }
+        renderBioReadinessUI();
+        updateQuickWeightBaseLabel();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            renderFamilyMealPrepUI();
+            renderBioReadinessUI();
+            updateQuickWeightBaseLabel();
+            if (typeof renderMemberTodayActionCard === 'function') renderMemberTodayActionCard();
+        }, 750);
+    });
+    </script>
 </body>
+
 
 
 
