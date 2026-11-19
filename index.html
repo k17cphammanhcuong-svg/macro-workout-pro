@@ -15819,15 +15819,19 @@
         // 1. Khi #gymRestTimerWidget đang mở -> tự động thu gọn #quickDataActionBar thành 1 nút tròn nhỏ
         if (quickBar && quickCollapsedBtn && quickFullContent) {
             if (isRestTimerVisible) {
-                quickCollapsedBtn.classList.remove('hidden');
-                quickFullContent.classList.add('hidden');
-                quickBar.classList.remove('p-2.5', 'rounded-2xl');
-                quickBar.classList.add('p-1', 'rounded-full');
+                if (quickCollapsedBtn.classList.contains('hidden')) quickCollapsedBtn.classList.remove('hidden');
+                if (!quickFullContent.classList.contains('hidden')) quickFullContent.classList.add('hidden');
+                if (quickBar.classList.contains('p-2.5') || !quickBar.classList.contains('rounded-full')) {
+                    quickBar.classList.remove('p-2.5', 'rounded-2xl');
+                    quickBar.classList.add('p-1', 'rounded-full');
+                }
             } else {
-                quickCollapsedBtn.classList.add('hidden');
-                quickFullContent.classList.remove('hidden');
-                quickBar.classList.remove('p-1', 'rounded-full');
-                quickBar.classList.add('p-2.5', 'rounded-2xl');
+                if (!quickCollapsedBtn.classList.contains('hidden')) quickCollapsedBtn.classList.add('hidden');
+                if (quickFullContent.classList.contains('hidden')) quickFullContent.classList.remove('hidden');
+                if (quickBar.classList.contains('p-1') || !quickBar.classList.contains('rounded-2xl')) {
+                    quickBar.classList.remove('p-1', 'rounded-full');
+                    quickBar.classList.add('p-2.5', 'rounded-2xl');
+                }
             }
         }
 
@@ -15858,12 +15862,21 @@
         }
     }
 
+    let _isUpdatingFloatingDock = false;
     function initFloatingDockObserver() {
         updateFloatingDockManager();
         window.addEventListener('resize', () => updateFloatingDockManager());
-        const targets = ['gymRestTimerWidget', 'pwaInstallBanner', 'quickDataActionBar', 'floatingPipVideoWidget'];
+        const targets = ['gymRestTimerWidget', 'pwaInstallBanner', 'floatingPipVideoWidget'];
         if (typeof MutationObserver !== 'undefined') {
-            const obs = new MutationObserver(() => updateFloatingDockManager());
+            const obs = new MutationObserver(() => {
+                if (_isUpdatingFloatingDock) return;
+                _isUpdatingFloatingDock = true;
+                try {
+                    updateFloatingDockManager();
+                } finally {
+                    _isUpdatingFloatingDock = false;
+                }
+            });
             targets.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) obs.observe(el, { attributes: true, attributeFilter: ['class'] });
@@ -17420,8 +17433,9 @@
         // 3. Lấy từ giáo án tuần hiện tại
         if (weeklyWorkoutPlan && typeof weeklyWorkoutPlan === 'object') {
             Object.values(weeklyWorkoutPlan).forEach(dayObj => {
-                if (dayObj && Array.isArray(dayObj.exercises)) {
-                    dayObj.exercises.forEach(ex => {
+                const exList = dayObj?.items || dayObj?.exercises || [];
+                if (Array.isArray(exList)) {
+                    exList.forEach(ex => {
                         if (ex && ex.name) {
                             const k = typeof normalizeExercisePrKey === 'function'
                                 ? normalizeExercisePrKey(ex.name)
@@ -17495,8 +17509,9 @@
         // 2. Quét thêm hiệp tập đang nhập trực tiếp trong tuần hiện tại nếu chưa lưu vào lịch sử
         if (weeklyWorkoutPlan && typeof weeklyWorkoutPlan === 'object') {
             Object.values(weeklyWorkoutPlan).forEach(dayObj => {
-                if (!dayObj || !Array.isArray(dayObj.exercises)) return;
-                dayObj.exercises.forEach(ex => {
+                const exList = dayObj?.items || dayObj?.exercises || [];
+                if (!Array.isArray(exList)) return;
+                exList.forEach(ex => {
                     const k = typeof normalizeExercisePrKey === 'function'
                         ? normalizeExercisePrKey(ex.name)
                         : (ex.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '_');
@@ -17608,8 +17623,11 @@
     }
 
     function openExerciseProgressionModalFromFocus() {
-        const dayObj = weeklyWorkoutPlan ? weeklyWorkoutPlan[currentActiveWorkoutDay] : null;
-        const ex = (dayObj && Array.isArray(dayObj.exercises)) ? dayObj.exercises[gymFocusState.exerciseIndex] : null;
+        const activeDay = typeof currentSelectedDay !== 'undefined' ? currentSelectedDay : 'd1';
+        const activeIdx = typeof currentFocusExIndex !== 'undefined' ? currentFocusExIndex : 0;
+        const dayObj = weeklyWorkoutPlan ? weeklyWorkoutPlan[activeDay] : null;
+        const exList = dayObj?.items || dayObj?.exercises || [];
+        const ex = Array.isArray(exList) ? exList[activeIdx] : null;
         if (ex && ex.name) {
             const k = typeof normalizeExercisePrKey === 'function'
                 ? normalizeExercisePrKey(ex.name)
